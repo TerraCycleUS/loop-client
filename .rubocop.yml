@@ -1,0 +1,19 @@
+inherit_from:
+  - https://raw.githubusercontent.com/TerraCycleUS/legacy-config/master/.rubocop.yml
+
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+
+Style/Documentation:
+  Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false
