@@ -17,7 +17,7 @@ And then execute:
 ## Configuration
 
 ```
-require 'loop/client'
+require 'loop_client'
 
 LoopClient.configure do |config|
   config.logger = Logger.new(STDOUT) # or your own logger
