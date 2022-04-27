@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'loop_client'
+require 'webmock/rspec'
+require 'helpers/fake_redis'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

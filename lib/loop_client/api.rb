@@ -32,20 +32,20 @@ module LoopClient
       request(method: :get, params: params)
     end
 
-    def post(params: nil, body: nil)
-      request(method: :post, params: params, body: body)
+    def post(body: nil)
+      request(method: :post, body: body)
     end
 
-    def put(params: nil, body: nil)
-      request(method: :put, params: params, body: body)
+    def put(body: nil)
+      request(method: :put, body: body)
     end
 
-    def patch(params: nil, body: nil)
-      request(method: :patch, params: params, body: body)
+    def patch(body: nil)
+      request(method: :patch, body: body)
     end
 
     def delete(params: nil)
-      request(method: :delete, params: params, body: body)
+      request(method: :delete, params: params)
     end
 
     private
