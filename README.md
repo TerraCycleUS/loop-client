@@ -22,6 +22,7 @@ require 'loop_client'
 LoopClient.configure do |config|
   config.logger = Logger.new(STDOUT) # or your own logger
 
+  config.redis = Redis.new
   config.auth_url = ENV['AUTH0_URL']
   config.client_id = ENV['AUTH0_CLIENT_ID']
   config.client_secret = ENV['AUTH0_CLIENT_SECRET']
