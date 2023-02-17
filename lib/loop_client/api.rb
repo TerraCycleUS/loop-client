@@ -56,15 +56,17 @@ module LoopClient
       @path_parts = []
     end
 
-    def path
-      path_parts.join('/')
+    def build_path_and_reset
+      path = path_parts.join('/')
+      @path_parts = []
+      path
     end
 
     def request(method:, params: nil, body: nil)
       api_request = ApiRequest.new \
         token_fetcher: token_fetcher,
         url: LoopClient.configuration.apis[api][:url],
-        path: path,
+        path: build_path_and_reset,
         params: params,
         body: body
 
