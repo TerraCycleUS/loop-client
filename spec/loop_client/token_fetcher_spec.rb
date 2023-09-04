@@ -10,15 +10,15 @@ RSpec.describe LoopClient::TokenFetcher do
   end
 
   let(:access_token) do
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UZ3lNME0yTnprNE1qazNNek5HTVRZMk9EQXpRVFJF'\
-      'TkRreU5rRXlPVFpHUmpoRlFqRkdOdyJ9.eyJpc3MiOiJodHRwczovL2Rldi1kbXMuYXV0aDAuY29tLyIsInN1YiI'\
-      '6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY3QGNsaWVudHMiLCJhdWQiOiJkZXYtdGRzIiwiaWF0Ijo'\
-      'xNTcyMDE1NjYxLCJleHAiOjE1NzIxMDIwNjEsImF6cCI6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY'\
-      '3Iiwic2NvcGUiOiJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJ'\
-      'wZXJtaXNzaW9ucyI6WyJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiXX0.AF8omJr8g98fLqUYwxb9P6QLTHfFmz-'\
-      'o-uOxoqXW1SAlHA0bGCpIPcxewbWT6xsJhT-2EyIhE0UdHaD0kaZmaSdnIyr4uaW2cXOwE8jWMeQ73CC3gS9eNTm'\
-      'tsZK3PIYCDXii8Qsgn7Ze7ROz9MlMVpjn1JdmFiH7BCYA218ChMM2jtNbsjwDgokwBlXrJWub2DtA7c0Hp3iB68T'\
-      'Zy1nW82N44cZSj8WGdzA8ZB1vLSLXiVdET4jWCXNq-g18fViT7MGh6mSPIPSITsu-JE9KPK9_AhmeC-i0QqRn4dB'\
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UZ3lNME0yTnprNE1qazNNek5HTVRZMk9EQXpRVFJF' \
+      'TkRreU5rRXlPVFpHUmpoRlFqRkdOdyJ9.eyJpc3MiOiJodHRwczovL2Rldi1kbXMuYXV0aDAuY29tLyIsInN1YiI' \
+      '6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY3QGNsaWVudHMiLCJhdWQiOiJkZXYtdGRzIiwiaWF0Ijo' \
+      'xNTcyMDE1NjYxLCJleHAiOjE1NzIxMDIwNjEsImF6cCI6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY' \
+      '3Iiwic2NvcGUiOiJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJ' \
+      'wZXJtaXNzaW9ucyI6WyJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiXX0.AF8omJr8g98fLqUYwxb9P6QLTHfFmz-' \
+      'o-uOxoqXW1SAlHA0bGCpIPcxewbWT6xsJhT-2EyIhE0UdHaD0kaZmaSdnIyr4uaW2cXOwE8jWMeQ73CC3gS9eNTm' \
+      'tsZK3PIYCDXii8Qsgn7Ze7ROz9MlMVpjn1JdmFiH7BCYA218ChMM2jtNbsjwDgokwBlXrJWub2DtA7c0Hp3iB68T' \
+      'Zy1nW82N44cZSj8WGdzA8ZB1vLSLXiVdET4jWCXNq-g18fViT7MGh6mSPIPSITsu-JE9KPK9_AhmeC-i0QqRn4dB' \
       'wWi2GQN5NjOTvBd8Rc-UNLm_lHrDUCm92T5cDvdT7L9hySA'
   end
   let(:token) { LoopClient::Token.new(access_token) }
@@ -65,8 +65,8 @@ RSpec.describe LoopClient::TokenFetcher do
     end
 
     context 'without cached data' do
-      let(:redis) { Helpers::FakeRedis.new }
-      let(:configuration) { Struct.new(:redis) }
+      let(:redis)         { Helpers::FakeRedis.new     }
+      let(:configuration) { Struct.new(:redis)         }
 
       before do
         redis.flushall
@@ -86,7 +86,7 @@ RSpec.describe LoopClient::TokenFetcher do
     let(:headers) do
       {
         'Content-Type' => 'application/json',
-        'User-Agent' => 'Faraday v2.2.0',
+        'User-Agent' => 'Faraday v2.7.10',
         'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'Accept' => '*/*'
       }

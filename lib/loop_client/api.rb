@@ -8,7 +8,7 @@ module LoopClient
       raise Error, "Unknown api with name '#{api}'" if LoopClient.configuration.apis[api].blank?
 
       @api = api
-      @path_parts = []
+      @path_parts = Concurrent::ThreadLocalVar.new { [] }
 
       @token_fetcher = TokenFetcher.new \
         auth_url: LoopClient.configuration.auth_url,
@@ -18,9 +18,9 @@ module LoopClient
     end
 
     def method_missing(method, *args)
-      path_parts << method.to_s.downcase
-      path_parts << args if args.length.positive?
-      path_parts.flatten!
+      path_parts.value << method.to_s.downcase
+      path_parts.value << args if args.length.positive?
+      path_parts.value.flatten!
       self
     end
 
@@ -53,12 +53,12 @@ module LoopClient
     attr_reader :api, :path_parts
 
     def reset
-      @path_parts = []
+      path_parts.value = []
     end
 
     def build_path_and_reset
-      path = path_parts.join('/')
-      @path_parts = []
+      path = path_parts.value.join('/')
+      reset
       path
     end
 

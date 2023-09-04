@@ -19,13 +19,13 @@ RSpec.describe LoopClient::ApiRequest do
   end
   # rubocop:enable RSpec::AnyInstance
 
-  let!(:loop_client_api) { LoopClient[:TDS] }
-  let(:token) { '333' }
-  let(:url) { 'https://test-tds.com' }
+  let!(:loop_client_api) { LoopClient[:TDS]              }
+  let(:token)            { '333'                         }
+  let(:url)              { 'https://test-tds.com'        }
   let(:headers) do
     {
       'Content-Type' => 'application/json',
-      'User-Agent' => 'Faraday v2.2.0',
+      'User-Agent' => 'Faraday v2.7.10',
       'Authorization' => "Bearer #{token}",
       'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
       'Accept' => '*/*'

@@ -7,6 +7,7 @@
   faraday
   zeitwerk
   addressable
+  concurrent
 ].each(&method(:require))
 
 class Object
