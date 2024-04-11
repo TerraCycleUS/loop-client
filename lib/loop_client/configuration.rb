@@ -4,7 +4,7 @@ module LoopClient
   class Configuration
     attr_reader :apis
     attr_writer :logger
-    attr_accessor :auth_url, :client_id, :client_secret, :redis
+    attr_accessor :auth_url, :client_id, :client_secret, :cache_store
 
     def initialize
       @apis = {}

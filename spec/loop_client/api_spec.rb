@@ -6,7 +6,7 @@ RSpec.describe LoopClient::Api do
     LoopClient.configure do |config|
       config.logger = Logger.new($stdout)
 
-      config.redis = Helpers::FakeRedis.new
+      config.cache_store = Helpers::FakeSolidCache.new
       config.auth_url = 'https://test.com'
       config.client_id = 'AUTH0_CLIENT_ID'
       config.client_secret = 'AUTH0_CLIENT_SECRET'

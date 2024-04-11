@@ -2,12 +2,13 @@
 
 %w[
   jwt
-  redis
   logger
   faraday
+  ostruct
   zeitwerk
   addressable
   concurrent
+  active_support
 ].each(&method(:require))
 
 class Object

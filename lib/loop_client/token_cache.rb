@@ -5,22 +5,17 @@ module LoopClient
     extend Logger
 
     def self.fetch(key)
-      redis = LoopClient.configuration.redis
+      cache_store = LoopClient.configuration.cache_store
 
-      ttl = redis.ttl(key)
+      access_token = cache_store.read(key)
 
-      # logger.debug("#{self.name}: ttl by key '#{key}': #{ttl}")
-
-      # buffer time 1.minutes
-      if ttl >= 60
-        access_token = redis.get(key)
+      unless access_token.blank?
         token = Token.new(access_token)
-
         return token if token.alive?
       end
 
       yield.tap do |x|
-        redis.set(key, x, exat: x.expiration)
+        cache_store.write(key, x, expires_at: Time.at(x.expiration))
       end
     end
   end

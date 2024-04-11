@@ -14,13 +14,13 @@ RSpec.describe LoopClient::TokenCache do
       'wWi2GQN5NjOTvBd8Rc-UNLm_lHrDUCm92T5cDvdT7L9hySA'
   end
   let(:token) { LoopClient::Token.new(access_token) }
-  let(:redis) { Helpers::FakeRedis.new }
-  let(:configuration) { Struct.new(:redis) }
+  let(:cache_store) { Helpers::FakeSolidCache.new }
+  let(:configuration) { Struct.new(:cache_store) }
 
   # rubocop:disable RSpec::AnyInstance
   before do
-    redis.flushall
-    allow(LoopClient).to receive(:configuration).and_return(configuration.new(redis))
+    cache_store.clear
+    allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
     allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 100)
   end
   # rubocop:enable RSpec::AnyInstance
@@ -38,15 +38,15 @@ RSpec.describe LoopClient::TokenCache do
     end
 
     it 'returns token' do
-      expect(redis.get('token')).to(eq(token))
+      expect(cache_store.read('token')).to(eq(token))
     end
   end
 
   context 'with cached value' do
     before do
-      allow(redis).to(receive(:ttl).and_return(100))
+      allow(cache_store).to(receive(:ttl).and_return(100))
       allow(Array).to(receive(:new).and_call_original)
-      redis.set('token', token)
+      cache_store.write('token', token)
       described_class.fetch('token') { [].push(token).first }
     end
 
@@ -55,7 +55,7 @@ RSpec.describe LoopClient::TokenCache do
     end
 
     it 'returns token' do
-      expect(redis.get('token')).to(eq(token))
+      expect(cache_store.read('token')).to(eq(token))
     end
   end
 end

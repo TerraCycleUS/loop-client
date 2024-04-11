@@ -9,7 +9,7 @@ RSpec.describe LoopClient::Configuration do
       configuration.auth_url = 'https://auth_url.com'
       configuration.client_id = '1'
       configuration.client_secret = 'SECRET'
-      configuration.redis = Helpers::FakeRedis.new
+      configuration.cache_store = Helpers::FakeSolidCache.new
     end
 
     it 'attr_accessor auth_url' do
@@ -24,8 +24,8 @@ RSpec.describe LoopClient::Configuration do
       expect(configuration.client_secret).to eq('SECRET')
     end
 
-    it 'attr_accessor redis' do
-      expect(configuration.redis).to be_a Helpers::FakeRedis
+    it 'attr_accessor cache_store' do
+      expect(configuration.cache_store).to be_a Helpers::FakeSolidCache
     end
   end
 

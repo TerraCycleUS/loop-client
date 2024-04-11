@@ -65,12 +65,12 @@ RSpec.describe LoopClient::TokenFetcher do
     end
 
     context 'without cached data' do
-      let(:redis)         { Helpers::FakeRedis.new     }
-      let(:configuration) { Struct.new(:redis)         }
+      let(:cache_store)         { Helpers::FakeSolidCache.new           }
+      let(:configuration)       { Struct.new(:cache_store)              }
 
       before do
-        redis.flushall
-        allow(LoopClient).to receive(:configuration).and_return(configuration.new(redis))
+        cache_store.clear
+        allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
       end
 
       # rubocop:disable RSpec::AnyInstance
@@ -86,7 +86,7 @@ RSpec.describe LoopClient::TokenFetcher do
     let(:headers) do
       {
         'Content-Type' => 'application/json',
-        'User-Agent' => 'Faraday v2.7.10',
+        'User-Agent' => 'Faraday v2.9.0',
         'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'Accept' => '*/*'
       }

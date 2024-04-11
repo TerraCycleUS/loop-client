@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in loop_client-client.gemspec
 gemspec
 
+gem 'activesupport'
 gem 'concurrent-ruby'
 gem 'pry'
 gem 'rake', '~> 13.0'

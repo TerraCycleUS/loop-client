@@ -13,7 +13,7 @@ module LoopClient
     end
 
     def alive?
-      Time.at(expiration) > Time.now
+      Time.at(expiration - 60) > Time.now
     end
   end
 end

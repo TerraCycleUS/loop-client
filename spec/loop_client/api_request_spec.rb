@@ -7,7 +7,7 @@ RSpec.describe LoopClient::ApiRequest do
     LoopClient.configure do |config|
       config.logger = Logger.new($stdout)
 
-      config.redis = Redis.new
+      config.cache_store = Helpers::FakeSolidCache.new
       config.auth_url = 'https://test.com'
       config.client_id = 'AUTH0_CLIENT_ID'
       config.client_secret = 'AUTH0_CLIENT_SECRET'
@@ -25,7 +25,7 @@ RSpec.describe LoopClient::ApiRequest do
   let(:headers) do
     {
       'Content-Type' => 'application/json',
-      'User-Agent' => 'Faraday v2.7.10',
+      'User-Agent' => 'Faraday v2.9.0',
       'Authorization' => "Bearer #{token}",
       'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
       'Accept' => '*/*'
