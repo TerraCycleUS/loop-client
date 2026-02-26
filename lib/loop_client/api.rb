@@ -76,23 +76,25 @@ module LoopClient
         body: body
 
       response = api_request.call(method: method)
-      duration = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000).round(2)
-
-      logger.info(
-        { message: 'LoopClient Request', service: api, method: method.to_s.upcase,
-          path: path, status: response.status, duration_ms: duration }.to_json
-      )
-
+      log_request(method: method, path: path, status: response.status, started_at: started_at)
       response
     rescue StandardError => e
-      duration = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000).round(2)
-      logger.error(
-        { message: 'LoopClient Request Failed', service: api, method: method.to_s.upcase,
-          path: path, error: e.message, duration_ms: duration }.to_json
-      )
+      log_request(method: method, path: path, error: e.message, started_at: started_at)
       raise
     ensure
       reset
+    end
+
+    def log_request(method:, path:, started_at:, status: nil, error: nil)
+      duration = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000).round(2)
+      payload = { message: 'LoopClient Request', service: api, method: method.to_s.upcase,
+                  path: path, duration_ms: duration }
+
+      if error
+        logger.error(payload.merge(error: error).to_json)
+      else
+        logger.info(payload.merge(status: status).to_json)
+      end
     end
   end
 end

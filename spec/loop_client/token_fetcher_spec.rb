@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics::BlockLength
 RSpec.describe LoopClient::TokenFetcher do
   subject(:token_fetcher) do
     described_class.new(auth_url: 'https://auth.com',
@@ -23,11 +22,11 @@ RSpec.describe LoopClient::TokenFetcher do
   end
   let(:token) { LoopClient::Token.new(access_token) }
 
-  # rubocop:disable RSpec::AnyInstance
+  # rubocop:disable RSpec/AnyInstance
   before do
     allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 100)
   end
-  # rubocop:enable RSpec::AnyInstance
+  # rubocop:enable RSpec/AnyInstance
 
   it '#attr_readers secret' do
     expect(token_fetcher.client_secret).to eq 'secret'
@@ -73,12 +72,12 @@ RSpec.describe LoopClient::TokenFetcher do
         allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
       end
 
-      # rubocop:disable RSpec::AnyInstance
+      # rubocop:disable RSpec/AnyInstance
       it 'returns token from #fetch' do
         allow_any_instance_of(described_class).to receive(:fetch).and_return(token)
         expect(token_fetcher.token).to eq(token)
       end
-      # rubocop:enable RSpec::AnyInstance
+      # rubocop:enable RSpec/AnyInstance
     end
   end
 
@@ -114,4 +113,3 @@ RSpec.describe LoopClient::TokenFetcher do
     end
   end
 end
-# rubocop:enable Metrics::BlockLength
