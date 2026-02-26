@@ -25,7 +25,7 @@ RSpec.describe LoopClient::ApiRequest do
   let(:headers) do
     {
       'Content-Type' => 'application/json',
-      'User-Agent' => 'Faraday v2.9.0',
+      'User-Agent' => /Faraday/,
       'Authorization' => "Bearer #{token}",
       'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
       'Accept' => '*/*'

@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'addressable'
   spec.add_dependency 'faraday'
   spec.add_dependency 'jwt'
+  spec.add_dependency 'ostruct'
   spec.add_dependency 'solid_cache'
   spec.add_dependency 'zeitwerk'
 end
