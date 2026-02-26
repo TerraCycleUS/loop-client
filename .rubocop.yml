@@ -1,7 +1,7 @@
 inherit_from:
   - https://raw.githubusercontent.com/TerraCycleUS/legacy-config/master/.rubocop.yml
 
-require:
+plugins:
   - rubocop-rake
   - rubocop-rspec
 

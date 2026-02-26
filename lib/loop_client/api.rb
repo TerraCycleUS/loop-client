@@ -2,6 +2,8 @@
 
 module LoopClient
   class Api
+    include Logger
+
     attr_reader :token_fetcher
 
     def initialize(api:)
@@ -63,16 +65,36 @@ module LoopClient
     end
 
     def request(method:, params: nil, body: nil)
+      path = build_path_and_reset
+      started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
       api_request = ApiRequest.new \
         token_fetcher: token_fetcher,
         url: LoopClient.configuration.apis[api][:url],
-        path: build_path_and_reset,
+        path: path,
         params: params,
         body: body
 
-      api_request.call(method: method)
+      response = api_request.call(method: method)
+      log_request(method: method, path: path, status: response.status, started_at: started_at)
+      response
+    rescue StandardError => e
+      log_request(method: method, path: path, error: e.message, started_at: started_at)
+      raise
     ensure
       reset
+    end
+
+    def log_request(method:, path:, started_at:, status: nil, error: nil)
+      duration = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000).round(2)
+      payload = { message: 'LoopClient Request', service: api, method: method.to_s.upcase,
+                  path: path, duration_ms: duration }
+
+      if error
+        logger.error(payload.merge(error: error).to_json)
+      else
+        logger.info(payload.merge(status: status).to_json)
+      end
     end
   end
 end

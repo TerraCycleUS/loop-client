@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics::BlockLength
 RSpec.describe LoopClient::ApiRequest do
-  # rubocop:disable RSpec::AnyInstance
+  # rubocop:disable RSpec/AnyInstance
   before do
     LoopClient.configure do |config|
       config.logger = Logger.new($stdout)
@@ -17,7 +16,7 @@ RSpec.describe LoopClient::ApiRequest do
 
     allow_any_instance_of(LoopClient::TokenFetcher).to receive(:token).and_return(token)
   end
-  # rubocop:enable RSpec::AnyInstance
+  # rubocop:enable RSpec/AnyInstance
 
   let!(:loop_client_api) { LoopClient[:TDS]              }
   let(:token)            { '333'                         }
@@ -25,7 +24,7 @@ RSpec.describe LoopClient::ApiRequest do
   let(:headers) do
     {
       'Content-Type' => 'application/json',
-      'User-Agent' => 'Faraday v2.9.0',
+      'User-Agent' => /Faraday/,
       'Authorization' => "Bearer #{token}",
       'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
       'Accept' => '*/*'
@@ -72,4 +71,3 @@ RSpec.describe LoopClient::ApiRequest do
     expect(loop_client_api.delete(params: { id: 1 }).status).to eq 200
   end
 end
-# rubocop:enable Metrics::BlockLength

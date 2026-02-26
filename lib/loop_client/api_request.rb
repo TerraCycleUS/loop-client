@@ -18,9 +18,9 @@ module LoopClient
       send(method)
     end
 
-    private
-
     ALLOCATE_METHODS = [:get, :post, :put, :patch, :delete].freeze
+
+    private
 
     def get
       connection.get(path, params)

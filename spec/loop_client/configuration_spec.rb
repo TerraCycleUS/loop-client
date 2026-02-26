@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics::BlockLength
 RSpec.describe LoopClient::Configuration do
   let(:configuration) { described_class.new }
 
@@ -71,4 +70,3 @@ RSpec.describe LoopClient::Configuration do
     end
   end
 end
-# rubocop:enable Metrics::BlockLength

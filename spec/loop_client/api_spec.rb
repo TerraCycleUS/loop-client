@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics::BlockLength
 RSpec.describe LoopClient::Api do
   before do
     LoopClient.configure do |config|
@@ -15,10 +14,11 @@ RSpec.describe LoopClient::Api do
     end
 
     allow(LoopClient::ApiRequest).to receive(:new).and_return(api_request)
-    allow(api_request).to receive(:call).with(method: method)
+    allow(api_request).to receive(:call).with(method: method).and_return(response)
   end
 
   let(:api_request) { instance_double(LoopClient::ApiRequest) }
+  let(:response) { instance_double(Faraday::Response, status: 200) }
   let(:method) { :get }
   let!(:loop_client_api) { LoopClient[:TDS] }
 
@@ -132,4 +132,3 @@ RSpec.describe LoopClient::Api do
     end
   end
 end
-# rubocop:enable Metrics::BlockLength

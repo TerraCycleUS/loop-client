@@ -17,21 +17,21 @@ RSpec.describe LoopClient::TokenCache do
   let(:cache_store) { Helpers::FakeSolidCache.new }
   let(:configuration) { Struct.new(:cache_store) }
 
-  # rubocop:disable RSpec::AnyInstance
+  # rubocop:disable RSpec/AnyInstance
   before do
     cache_store.clear
     allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
     allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 100)
   end
-  # rubocop:enable RSpec::AnyInstance
+  # rubocop:enable RSpec/AnyInstance
 
   context 'with new value' do
-    # rubocop:disable Style::EmptyLiteral
+    # rubocop:disable Style/EmptyLiteral
     before do
       allow(Array).to receive(:new).and_call_original
       described_class.fetch('token') { Array.new.push(token).first }
     end
-    # rubocop:enable Style::EmptyLiteral
+    # rubocop:enable Style/EmptyLiteral
 
     it 'calls block' do
       expect(Array).to(have_received(:new).once)

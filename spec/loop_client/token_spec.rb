@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics::BlockLength
 RSpec.describe LoopClient::Token do
   let(:access_token) do
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UZ3lNME0yTnprNE1qazNNek5HTVRZMk9EQXpRVFJF' \
@@ -38,10 +37,9 @@ RSpec.describe LoopClient::Token do
     expect(token.expiration).to eq(1_572_102_061)
   end
 
-  # rubocop:disable RSpec::PredicateMatcher
+  # rubocop:disable RSpec/PredicateMatcher
   it '#alive?' do
     expect(token.alive?).to be_falsey
   end
-  # rubocop:enable RSpec::PredicateMatcher
+  # rubocop:enable RSpec/PredicateMatcher
 end
-# rubocop:enable Metrics::BlockLength
