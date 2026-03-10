@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require_relative 'lib/loop_client/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'loop-client'
+  spec.name = 'loop_client'
   spec.version = LoopClient::VERSION
   spec.authors = ['Loop IT']
   spec.email = ['loopit@terracycle.com']

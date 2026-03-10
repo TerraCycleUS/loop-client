@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in loop_client-client.gemspec
+# Specify your gem's dependencies in loop_client.gemspec
 gemspec
 
 gem 'activesupport'

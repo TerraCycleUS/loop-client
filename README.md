@@ -7,7 +7,7 @@ This is client gem for easy working with Integrated projects API
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'loop-client', github: 'TerraCycleUS/loop-client'
+gem 'loop_client', github: 'TerraCycleUS/loop-client'
 ```
 
 And then execute:
@@ -69,4 +69,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/loop-client.
+Bug reports and pull requests are welcome on GitHub at https://github.com/TerraCycleUS/loop-client.

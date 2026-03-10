@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    loop-client (1.0.0)
+    loop_client (1.0.0)
       addressable
       faraday
       jwt
@@ -231,7 +231,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   concurrent-ruby
-  loop-client!
+  loop_client!
   pry
   rake (~> 13.0)
   rspec (~> 3.0)
