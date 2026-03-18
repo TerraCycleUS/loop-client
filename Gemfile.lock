@@ -95,9 +95,13 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     method_source (1.1.0)
-    minitest (5.25.5)
+    mini_portile2 (2.8.9)
+    minitest (5.27.0)
     net-http (0.6.0)
       uri
+    nokogiri (1.18.9)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-musl)
@@ -156,6 +160,9 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.0)
+    rbs (3.10.3)
+      logger
+      tsort
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
@@ -196,6 +203,10 @@ GEM
     rubocop-rspec (3.6.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
+    ruby-lsp (0.26.8)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 5)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     solid_cache (1.0.7)
@@ -205,11 +216,12 @@ GEM
     stringio (3.1.7)
     thor (1.4.0)
     timeout (0.4.3)
+    tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.5)
       unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-emoji (4.2.0)
     uri (1.0.3)
     useragent (0.16.11)
     webmock (3.25.1)
@@ -238,6 +250,7 @@ DEPENDENCIES
   rubocop (~> 1.21)
   rubocop-rake
   rubocop-rspec
+  ruby-lsp
   webmock
 
 BUNDLED WITH

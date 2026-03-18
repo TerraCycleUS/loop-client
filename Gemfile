@@ -14,3 +14,7 @@ gem 'rubocop', '~> 1.21'
 gem 'rubocop-rake'
 gem 'rubocop-rspec'
 gem 'webmock'
+
+group :development do
+  gem 'ruby-lsp', require: false
+end
