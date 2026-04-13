@@ -7,21 +7,23 @@ module LoopClient
     attr_reader :token_fetcher
 
     def initialize(api:)
-      raise Error, "Unknown api with name '#{api}'" if LoopClient.configuration.apis[api].blank?
+      config = LoopClient.configuration
+      raise Error, "Unknown api with name '#{api}'" if config.apis[api].blank?
 
       @api = api
+      @url = config.apis[api][:url]
       @path_parts = Concurrent::ThreadLocalVar.new { [] }
 
       @token_fetcher = TokenFetcher.new \
-        auth_url: LoopClient.configuration.auth_url,
-        client_id: LoopClient.configuration.client_id,
-        client_secret: LoopClient.configuration.client_secret,
-        audience: LoopClient.configuration.apis[api][:audience]
+        auth_url: config.auth_url,
+        client_id: config.client_id,
+        client_secret: config.client_secret,
+        audience: config.apis[api][:audience]
     end
 
     def method_missing(method, *args)
       path_parts.value << method.to_s.downcase
-      path_parts.value << args if args.length.positive?
+      path_parts.value << args if args.any?
       path_parts.value.flatten!
       self
     end
@@ -52,7 +54,7 @@ module LoopClient
 
     private
 
-    attr_reader :api, :path_parts
+    attr_reader :api, :url, :path_parts
 
     def reset
       path_parts.value = []
@@ -70,7 +72,7 @@ module LoopClient
 
       api_request = ApiRequest.new \
         token_fetcher: token_fetcher,
-        url: LoopClient.configuration.apis[api][:url],
+        url: url,
         path: path,
         params: params,
         body: body

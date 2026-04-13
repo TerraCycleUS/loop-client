@@ -18,7 +18,7 @@ module LoopClient
     end
 
     def logger
-      @logger ||= Logger.new($stdout)
+      @logger ||= ::Logger.new($stdout)
     end
   end
 end
