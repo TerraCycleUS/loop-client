@@ -8,18 +8,7 @@ RSpec.describe LoopClient::TokenFetcher do
                         client_secret: 'secret')
   end
 
-  let(:access_token) do
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UZ3lNME0yTnprNE1qazNNek5HTVRZMk9EQXpRVFJF' \
-      'TkRreU5rRXlPVFpHUmpoRlFqRkdOdyJ9.eyJpc3MiOiJodHRwczovL2Rldi1kbXMuYXV0aDAuY29tLyIsInN1YiI' \
-      '6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY3QGNsaWVudHMiLCJhdWQiOiJkZXYtdGRzIiwiaWF0Ijo' \
-      'xNTcyMDE1NjYxLCJleHAiOjE1NzIxMDIwNjEsImF6cCI6IjB5ejk4RFlhRDhickJRN0FGQ0lEazJmVnk5NElJbzY' \
-      '3Iiwic2NvcGUiOiJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJ' \
-      'wZXJtaXNzaW9ucyI6WyJyZWFkOnNoaXBwaW5nX2NvbnRhaW5lcnMiXX0.AF8omJr8g98fLqUYwxb9P6QLTHfFmz-' \
-      'o-uOxoqXW1SAlHA0bGCpIPcxewbWT6xsJhT-2EyIhE0UdHaD0kaZmaSdnIyr4uaW2cXOwE8jWMeQ73CC3gS9eNTm' \
-      'tsZK3PIYCDXii8Qsgn7Ze7ROz9MlMVpjn1JdmFiH7BCYA218ChMM2jtNbsjwDgokwBlXrJWub2DtA7c0Hp3iB68T' \
-      'Zy1nW82N44cZSj8WGdzA8ZB1vLSLXiVdET4jWCXNq-g18fViT7MGh6mSPIPSITsu-JE9KPK9_AhmeC-i0QqRn4dB' \
-      'wWi2GQN5NjOTvBd8Rc-UNLm_lHrDUCm92T5cDvdT7L9hySA'
-  end
+  let(:access_token) { Helpers::JWT_ACCESS_TOKEN }
   let(:token) { LoopClient::Token.new(access_token) }
 
   # rubocop:disable RSpec/AnyInstance
@@ -56,7 +45,7 @@ RSpec.describe LoopClient::TokenFetcher do
         expect(token_fetcher.token).to eq(token)
       end
 
-      it 'returns stubbed token' do
+      it 'returns cached in-memory token when alive' do
         token_fetcher.instance_variable_set(:@access_token, token)
         token_fetcher.token
         expect(LoopClient::TokenCache).not_to have_received(:fetch)
@@ -108,8 +97,8 @@ RSpec.describe LoopClient::TokenFetcher do
                    headers: { 'Content-Type' => 'application/json' })
     end
 
-    it '#attr_readers' do
-      expect(token_fetcher.fetch).to eq token
+    it 'fetches token from Auth0' do
+      expect(token_fetcher.send(:fetch)).to eq token
     end
   end
 end

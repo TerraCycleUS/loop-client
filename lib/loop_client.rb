@@ -9,13 +9,8 @@
   addressable
   concurrent
   active_support
+  active_support/core_ext/object/blank
 ].each(&method(:require))
-
-class Object
-  def blank?
-    respond_to?(:empty?) ? !!empty? : !self
-  end
-end
 
 module LoopClient
   class << self

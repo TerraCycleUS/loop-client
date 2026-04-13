@@ -2,8 +2,6 @@
 
 module LoopClient
   class Token < String
-    include Logger
-
     def payload
       @payload ||= JWT.decode(self, nil, false, algorithm: 'RS256')
     end

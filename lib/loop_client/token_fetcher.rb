@@ -14,10 +14,14 @@ module LoopClient
     end
 
     def token
-      return access_token if valid?
+      return access_token if access_token&.alive?
 
       self.access_token = TokenCache.fetch(cache_key) { fetch }
     end
+
+    private
+
+    attr_accessor :access_token
 
     def fetch
       uri = URI("#{auth_url}oauth/token")
@@ -33,14 +37,6 @@ module LoopClient
       Token.new(response.body.access_token)
     end
 
-    private
-
-    attr_accessor :access_token
-
-    def valid?
-      !access_token.nil? && Time.at(access_token.expiration) > Time.now
-    end
-
     def request_body
       {
         client_id: client_id,
@@ -51,7 +47,7 @@ module LoopClient
     end
 
     def cache_key
-      "#{self.class.name}:#{auth_url}:#{client_id}:#{audience}"
+      @cache_key ||= "#{self.class.name}:#{auth_url}:#{client_id}:#{audience}"
     end
   end
 end

@@ -2,7 +2,7 @@
 
 module LoopClient
   class ApiRequest
-    attr_reader :url, :path, :params, :body, :token_fetcher
+    HTTP_METHODS = [:get, :post, :put, :patch, :delete].freeze
 
     def initialize(token_fetcher:, url:, path:, params: nil, body: nil)
       @url = url
@@ -13,14 +13,14 @@ module LoopClient
     end
 
     def call(method:)
-      raise Error, "unknown method '#{method}'" unless ALLOCATE_METHODS.include?(method)
+      raise Error, "unknown method '#{method}'" unless HTTP_METHODS.include?(method)
 
       send(method)
     end
 
-    ALLOCATE_METHODS = [:get, :post, :put, :patch, :delete].freeze
-
     private
+
+    attr_reader :url, :path, :params, :body, :token_fetcher
 
     def get
       connection.get(path, params)

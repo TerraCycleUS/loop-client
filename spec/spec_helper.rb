@@ -3,6 +3,7 @@
 require 'loop_client'
 require 'webmock/rspec'
 require 'helpers/fake_solid_cache'
+require 'helpers/test_data'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
