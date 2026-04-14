@@ -2,60 +2,81 @@
 
 RSpec.describe LoopClient do
   it 'has a version number' do
-    expect(LoopClient::VERSION).not_to be_nil
+    expect(described_class::VERSION).not_to be_nil
   end
 
-  context 'without configured api' do
-    it 'has a configuration' do
+  describe '.configuration' do
+    it 'returns a Configuration instance' do
       expect(described_class.configuration).to be_a LoopClient::Configuration
     end
 
-    it 'accepts configure' do
-      expect(described_class.configure { 'a' }).to eq 'a'
-    end
-
-    it 'raise exception with unknown api' do
-      expect { described_class['test'] }.to raise_error LoopClient::Error, "Unknown api with name 'test'"
+    it 'memoizes the instance' do
+      config = described_class.configuration
+      expect(described_class.configuration).to be config
     end
   end
 
-  context 'with configured api' do
+  describe '.configure' do
+    it 'yields configuration' do
+      described_class.configure do |config|
+        expect(config).to be_a LoopClient::Configuration
+      end
+    end
+  end
+
+  describe '.[]' do
     before do
       described_class.configure do |config|
-        config.logger = Logger.new($stdout)
-
         config.auth_url = 'AUTH0_URL'
         config.client_id = 'AUTH0_CLIENT_ID'
         config.client_secret = 'AUTH0_CLIENT_SECRET'
-
         config.add_api :TDS, url: 'TDS_URL', audience: 'TDS_AUDIENCE'
         config.add_api :DMS, url: 'DMS_URL', audience: 'DMS_AUDIENCE'
         config.add_api :CoMS, url: 'COMS_URL', audience: 'COMS_AUDIENCE'
       end
     end
 
-    let(:apis) do
-      {
-        TDS: { url: 'TDS_URL', audience: 'TDS_AUDIENCE' },
-        DMS: { url: 'DMS_URL', audience: 'DMS_AUDIENCE' },
-        CoMS: { url: 'COMS_URL', audience: 'COMS_AUDIENCE' }
-      }
+    it 'raises error for unknown api' do
+      expect { described_class[:UNKNOWN] }.to raise_error LoopClient::Error, "Unknown api with name 'UNKNOWN'"
     end
 
-    it 'has a right configuration' do
-      expect(described_class.configuration.apis).to eq(apis)
-    end
-
-    it 'returns right api configs for TDS' do
+    it 'returns Api instance for TDS' do
       expect(described_class[:TDS]).to be_a LoopClient::Api
     end
 
-    it 'returns right api configs for DMS' do
+    it 'returns Api instance for DMS' do
       expect(described_class[:DMS]).to be_a LoopClient::Api
     end
 
-    it 'returns right api configs CoMS' do
+    it 'returns Api instance for CoMS' do
       expect(described_class[:CoMS]).to be_a LoopClient::Api
+    end
+
+    it 'caches Api instances per key' do
+      first_call = described_class[:TDS]
+      expect(described_class[:TDS]).to be first_call
+    end
+  end
+
+  describe '.reset!' do
+    before do
+      described_class.configure do |config|
+        config.auth_url = 'AUTH0_URL'
+        config.client_id = 'AUTH0_CLIENT_ID'
+        config.client_secret = 'AUTH0_CLIENT_SECRET'
+        config.add_api :TDS, url: 'TDS_URL', audience: 'TDS_AUDIENCE'
+      end
+      described_class[:TDS]
+    end
+
+    it 'resets configuration' do
+      described_class.reset!
+      expect(described_class.configuration.apis).to be_empty
+    end
+
+    it 'resets cached apis' do
+      described_class.reset!
+      expect { described_class[:TDS] }.to raise_error LoopClient::Error
     end
   end
 end

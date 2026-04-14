@@ -26,6 +26,11 @@ module LoopClient
       @apis ||= {}
       @apis[key] ||= Api.new(api: key)
     end
+
+    def reset!
+      @configuration = Configuration.new
+      @apis = {}
+    end
   end
 end
 

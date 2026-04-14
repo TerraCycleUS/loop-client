@@ -10,41 +10,57 @@ RSpec.describe LoopClient::TokenCache do
   before do
     cache_store.clear
     allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
-    allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 100)
+    allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 120)
   end
   # rubocop:enable RSpec/AnyInstance
 
-  context 'with new value' do
-    # rubocop:disable Style/EmptyLiteral
-    before do
-      allow(Array).to receive(:new).and_call_original
-      described_class.fetch('token') { Array.new.push(token).first }
-    end
-    # rubocop:enable Style/EmptyLiteral
+  describe '.fetch' do
+    context 'when cache is empty' do
+      it 'calls the block' do
+        block_called = false
+        described_class.fetch('token') { block_called = true; token } # rubocop:disable Style/Semicolon
+        expect(block_called).to be true
+      end
 
-    it 'calls block' do
-      expect(Array).to(have_received(:new).once)
-    end
+      it 'returns the token from block' do
+        result = described_class.fetch('token') { token }
+        expect(result).to eq(token)
+      end
 
-    it 'returns token' do
-      expect(cache_store.read('token')).to(eq(token))
-    end
-  end
-
-  context 'with cached value' do
-    before do
-      allow(cache_store).to(receive(:ttl).and_return(100))
-      allow(Array).to(receive(:new).and_call_original)
-      cache_store.write('token', token)
-      described_class.fetch('token') { [].push(token).first }
+      it 'writes token to cache' do
+        described_class.fetch('token') { token }
+        expect(cache_store.read('token')).to eq(token)
+      end
     end
 
-    it 'does not calls block' do
-      expect(Array).not_to(have_received(:new))
+    context 'when cache has alive token' do
+      before { cache_store.write('token', token) }
+
+      it 'does not call the block' do
+        block_called = false
+        described_class.fetch('token') { block_called = true; token } # rubocop:disable Style/Semicolon
+        expect(block_called).to be false
+      end
+
+      it 'returns the cached token' do
+        result = described_class.fetch('token') { token }
+        expect(result).to eq(token)
+      end
     end
 
-    it 'returns token' do
-      expect(cache_store.read('token')).to(eq(token))
+    context 'when cache has expired token' do
+      # rubocop:disable RSpec/AnyInstance
+      before do
+        cache_store.write('token', token)
+        allow_any_instance_of(LoopClient::Token).to receive(:alive?).and_return(false)
+      end
+      # rubocop:enable RSpec/AnyInstance
+
+      it 'calls the block for a fresh token' do
+        block_called = false
+        described_class.fetch('token') { block_called = true; token } # rubocop:disable Style/Semicolon
+        expect(block_called).to be true
+      end
     end
   end
 end

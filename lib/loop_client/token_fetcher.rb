@@ -2,8 +2,6 @@
 
 module LoopClient
   class TokenFetcher
-    include Logger
-
     attr_reader :audience, :client_id, :client_secret, :auth_url
 
     def initialize(auth_url:, audience:, client_id:, client_secret:)
