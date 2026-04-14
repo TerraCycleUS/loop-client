@@ -2,7 +2,7 @@
 
 RSpec.describe LoopClient::TokenFetcher do
   subject(:token_fetcher) do
-    described_class.new(auth_url: 'https://auth.com',
+    described_class.new(auth_url: 'https://auth.com/',
                         audience: 'audience',
                         client_id: '333',
                         client_secret: 'secret')
@@ -13,48 +13,52 @@ RSpec.describe LoopClient::TokenFetcher do
 
   # rubocop:disable RSpec/AnyInstance
   before do
-    allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 100)
+    allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 120)
   end
   # rubocop:enable RSpec/AnyInstance
 
-  it '#attr_readers secret' do
-    expect(token_fetcher.client_secret).to eq 'secret'
-  end
-
-  it '#attr_readers auth_url' do
-    expect(token_fetcher.auth_url).to eq 'https://auth.com'
-  end
-
-  it '#attr_readers audience' do
-    expect(token_fetcher.audience).to eq 'audience'
-  end
-
-  it '#attr_readers client_id' do
-    expect(token_fetcher.client_id).to eq '333'
+  describe 'attr_readers' do
+    it { expect(token_fetcher.auth_url).to eq 'https://auth.com/' }
+    it { expect(token_fetcher.audience).to eq 'audience' }
+    it { expect(token_fetcher.client_id).to eq '333' }
+    it { expect(token_fetcher.client_secret).to eq 'secret' }
   end
 
   describe '#token' do
-    let(:key) { 'LoopClient::TokenFetcher:https://auth.com:333:audience' }
+    let(:key) { 'LoopClient::TokenFetcher:https://auth.com/:333:audience' }
 
     before do
       allow(LoopClient::TokenCache).to receive(:fetch).with(key).and_return(token)
     end
 
-    describe 'token' do
-      it 'returns token from LoopClient::Token' do
-        expect(token_fetcher.token).to eq(token)
-      end
+    it 'fetches token via TokenCache' do
+      expect(token_fetcher.token).to eq(token)
+    end
 
-      it 'returns cached in-memory token when alive' do
-        token_fetcher.instance_variable_set(:@access_token, token)
-        token_fetcher.token
-        expect(LoopClient::TokenCache).not_to have_received(:fetch)
-      end
+    it 'returns in-memory cached token when alive' do
+      token_fetcher.instance_variable_set(:@access_token, token)
+      token_fetcher.token
+      expect(LoopClient::TokenCache).not_to have_received(:fetch)
+    end
+
+    it 'refetches when in-memory token is expired' do
+      expired_token = LoopClient::Token.new(access_token)
+      allow(expired_token).to receive(:alive?).and_return(false)
+      token_fetcher.instance_variable_set(:@access_token, expired_token)
+
+      token_fetcher.token
+      expect(LoopClient::TokenCache).to have_received(:fetch).with(key)
+    end
+
+    it 'fetches via TokenCache when access_token is nil' do
+      token_fetcher.instance_variable_set(:@access_token, nil)
+      token_fetcher.token
+      expect(LoopClient::TokenCache).to have_received(:fetch).with(key)
     end
 
     context 'without cached data' do
-      let(:cache_store)         { Helpers::FakeSolidCache.new           }
-      let(:configuration)       { Struct.new(:cache_store)              }
+      let(:cache_store) { Helpers::FakeSolidCache.new }
+      let(:configuration) { Struct.new(:cache_store) }
 
       before do
         cache_store.clear
@@ -62,11 +66,23 @@ RSpec.describe LoopClient::TokenFetcher do
       end
 
       # rubocop:disable RSpec/AnyInstance
-      it 'returns token from #fetch' do
+      it 'calls fetch to get a new token' do
         allow_any_instance_of(described_class).to receive(:fetch).and_return(token)
         expect(token_fetcher.token).to eq(token)
       end
       # rubocop:enable RSpec/AnyInstance
+    end
+  end
+
+  describe '#cache_key' do
+    it 'returns a key composed of class name, auth_url, client_id, and audience' do
+      expected = 'LoopClient::TokenFetcher:https://auth.com/:333:audience'
+      expect(token_fetcher.send(:cache_key)).to eq(expected)
+    end
+
+    it 'memoizes the key' do
+      first_call = token_fetcher.send(:cache_key)
+      expect(token_fetcher.send(:cache_key)).to be(first_call)
     end
   end
 
@@ -90,7 +106,7 @@ RSpec.describe LoopClient::TokenFetcher do
     end
 
     before do
-      stub_request(:post, 'https://auth.comoauth/token')
+      stub_request(:post, 'https://auth.com/oauth/token')
         .with(body: post_params, headers: headers)
         .to_return(status: 200,
                    body: { access_token: access_token }.to_json,

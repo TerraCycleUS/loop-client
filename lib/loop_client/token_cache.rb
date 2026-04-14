@@ -2,8 +2,6 @@
 
 module LoopClient
   class TokenCache
-    extend Logger
-
     def self.fetch(key)
       cache_store = LoopClient.configuration.cache_store
 

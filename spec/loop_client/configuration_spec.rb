@@ -29,33 +29,41 @@ RSpec.describe LoopClient::Configuration do
   end
 
   describe '#add_api' do
-    it 'raises proper exception for blank url' do
+    it 'raises error for blank url' do
       expect { configuration.add_api('TDS', url: nil, audience: 'audience') }
-        .to raise_exception LoopClient::Error, "Url can't be blank"
+        .to raise_error LoopClient::Error, "Url can't be blank"
     end
 
-    it 'raises proper exception for blank audience' do
+    it 'raises error for empty string url' do
+      expect { configuration.add_api('TDS', url: '', audience: 'audience') }
+        .to raise_error LoopClient::Error, "Url can't be blank"
+    end
+
+    it 'raises error for blank audience' do
       expect { configuration.add_api('TDS', url: 'https://test.com', audience: nil) }
-        .to raise_exception LoopClient::Error, "audience can't be blank"
+        .to raise_error LoopClient::Error, "audience can't be blank"
+    end
+
+    it 'raises error for empty string audience' do
+      expect { configuration.add_api('TDS', url: 'https://test.com', audience: '') }
+        .to raise_error LoopClient::Error, "audience can't be blank"
     end
 
     context 'with one api' do
-      before do
-        configuration.add_api('TDS', url: 'https://test.com', audience: 'audience')
-      end
+      before { configuration.add_api('TDS', url: 'https://test.com', audience: 'audience') }
 
-      it 'adds api' do
+      it 'adds api with symbolized key' do
         expect(configuration.apis).to eq({ TDS: { url: 'https://test.com', audience: 'audience' } })
       end
     end
 
-    context 'with multi apis' do
+    context 'with multiple apis' do
       before do
         configuration.add_api('TDS', url: 'https://test.com', audience: 'audience')
         configuration.add_api('DMS', url: 'https://test2.com', audience: 'audience2')
       end
 
-      it 'adds api' do
+      it 'adds all apis' do
         expect(configuration.apis)
           .to eq({ TDS: { url: 'https://test.com', audience: 'audience' },
                    DMS: { url: 'https://test2.com', audience: 'audience2' } })
@@ -64,9 +72,14 @@ RSpec.describe LoopClient::Configuration do
   end
 
   describe '#logger' do
-    it 'raises proper exception for blank audience' do
-      configuration.logger = Logger.new($stdout)
+    it 'returns default Logger when not configured' do
       expect(configuration.logger).to be_a Logger
+    end
+
+    it 'returns custom logger when explicitly set' do
+      custom_logger = Logger.new($stderr)
+      configuration.logger = custom_logger
+      expect(configuration.logger).to be custom_logger
     end
   end
 end
