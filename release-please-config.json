@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/v17.11.1/schemas/config.json",
+  "bootstrap-sha": "f3fcfdf4279260a44cdd93606c6805370c010677",
+  "draft-pull-request": true,
+  "include-component-in-tag": false,
+  "pull-request-title-pattern": "chore${scope}: prepare${component} ${version}",
+  "pull-request-header": "This pull request prepares the next loop-client release.",
+  "pull-request-footer": "Review the version and changelog before merging.",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "perf",
+      "section": "Performance Improvements"
+    },
+    {
+      "type": "maintenance",
+      "section": "Maintenance"
+    },
+    {
+      "type": "revert",
+      "section": "Reverts"
+    }
+  ],
+  "packages": {
+    ".": {
+      "package-name": "loop_client",
+      "release-type": "ruby"
+    }
+  }
+}
