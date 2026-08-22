@@ -17,3 +17,7 @@ Style/Documentation:
 
 Style/OpenStructUse:
   Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/packaging_spec.rb'
