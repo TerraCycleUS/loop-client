@@ -24,6 +24,10 @@
       "section": "Maintenance"
     },
     {
+      "type": "build",
+      "section": "Build System"
+    },
+    {
       "type": "revert",
       "section": "Reverts"
     }
