@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/TerraCycleUS/loop-client/compare/v1.0.2...v2.0.0) (2026-08-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** the gem no longer installs on Ruby below 4.0.
+
+### Build System
+
+* **deps:** [ITG-409] require ruby 4.0 ([#15](https://github.com/TerraCycleUS/loop-client/issues/15)) ([b20cdd4](https://github.com/TerraCycleUS/loop-client/commit/b20cdd4fcadb338583a86d89fc0c097ff97ee1c5))
+
+
+### Continuous Integration
+
+* **release:** [ITG-409] branch every published release tag ([#17](https://github.com/TerraCycleUS/loop-client/issues/17)) ([7fad3dc](https://github.com/TerraCycleUS/loop-client/commit/7fad3dceb19a788cadf636dad6acdac71d9e18d0))
+
 ## [1.0.2](https://github.com/TerraCycleUS/loop-client/compare/v1.0.1...v1.0.2) (2026-08-22)
 
 
