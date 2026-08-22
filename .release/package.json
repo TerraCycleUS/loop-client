@@ -2,7 +2,7 @@
   "name": "loop-client-release-tooling",
   "private": true,
   "scripts": {
-    "postinstall": "node ../scripts/suppress-release-comment.mjs"
+    "postinstall": "node ./suppress-release-comment.mjs"
   },
   "dependencies": {
     "release-please": "17.11.1"
