@@ -1,5 +1,19 @@
 version: 2.1
 
+commands:
+  install_release_tooling:
+    steps:
+      - restore_cache:
+          keys:
+            - loop-client-npm-{{ checksum ".release/package-lock.json" }}
+      - run:
+          name: Install pinned release tooling
+          command: npm ci --prefix .release
+      - save_cache:
+          key: loop-client-npm-{{ checksum ".release/package-lock.json" }}
+          paths:
+            - ~/.npm
+
 jobs:
   build:
     docker:
@@ -13,20 +27,26 @@ jobs:
             bundle install
             bundle exec rake
 
+  release_rules:
+    docker:
+      - image: cimg/node:22.18.0
+    steps:
+      - checkout
+      - install_release_tooling
+      - run:
+          name: Verify release rules
+          command: node scripts/verify-release-please-rules.mjs
+
   release_please:
     docker:
       - image: cimg/node:22.18.0
     steps:
       - checkout
-      - run:
-          name: Install pinned release tooling
-          command: npm ci --prefix .release
+      - install_release_tooling
       - run:
           name: Publish a merged release pull request and prepare the next release
           command: |
             set -euo pipefail
-
-            : "${RELEASE_PLEASE_TOKEN:?RELEASE_PLEASE_TOKEN is required}"
 
             RELEASE_PLEASE=".release/node_modules/.bin/release-please"
 
@@ -45,10 +65,12 @@ workflows:
   build-test-release:
     jobs:
       - build
+      - release_rules
       - release_please:
           context: loop-client-release-please
           requires:
             - build
+            - release_rules
           serial-group: << pipeline.project.slug >>/release-please
           filters:
             branches:
