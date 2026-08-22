@@ -32,9 +32,15 @@ Store the credential in the restricted `loop-client-release-please` CircleCI con
 
 A future GitHub App integration should store the App ID, installation ID, and private key, then mint a short-lived installation token inside each job. Do not store a short-lived installation token as a static CircleCI value.
 
-The release job must run only on `master`, after `build` and `release_rules`, and remain serialized. It always runs `github-release` before `release-pr` so a merged release pull request is published before the next proposal is prepared.
+The release job must run only on `master`, after `build`, `release_rules`, and `title_rules`, and remain serialized. It always runs `github-release` before `release-pr` so a merged release pull request is published before the next proposal is prepared.
 
 Release Please is pinned to `17.11.1`. Its installation applies a deterministic repository-policy patch that suppresses the default release pull request comment while preserving tag, GitHub Release, and label handling. Installation fails if the pinned integration point changes, requiring an explicit review before upgrading.
+
+## CircleCI trigger limitation
+
+Use the CircleCI GitHub App trigger preset **PR opened or pushed to, default branch and tag pushes**. The title validator reads the current pull request title through the GitHub API when CircleCI supplies pull request context.
+
+A title-only edit does not reliably start a new CircleCI pipeline. Rerun the title check after editing a title, and preserve the validated title as the squash commit subject. Strict organization-wide enforcement requires a merge queue or an additional webhook-backed status check.
 
 ## Baseline
 
