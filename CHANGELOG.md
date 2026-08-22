@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/TerraCycleUS/loop-client/compare/v1.0.1...v1.0.2) (2026-08-22)
+
+
+### Continuous Integration
+
+* **release:** [ITG-409] resolve jira keys in release notes and cache the build ([#13](https://github.com/TerraCycleUS/loop-client/issues/13)) ([e9e0146](https://github.com/TerraCycleUS/loop-client/commit/e9e01464d06b4be210108f195150ab467f4a2908))
+
 ## [1.0.1](https://github.com/TerraCycleUS/loop-client/compare/v1.0.0...v1.0.1) (2026-08-22)
 
 
