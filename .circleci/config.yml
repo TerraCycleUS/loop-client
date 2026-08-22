@@ -15,6 +15,31 @@ commands:
             - ~/.npm
 
 jobs:
+  secret-scan:
+    docker:
+      - image: cimg/base:current
+    environment:
+      GITLEAKS_VERSION: 8.30.1
+    steps:
+      - checkout
+      - run:
+          name: Install gitleaks
+          command: |
+            curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+              | sudo tar -xz -C /usr/local/bin gitleaks
+            gitleaks version
+      - run:
+          name: Scan for secrets
+          command: |
+            git fetch --quiet origin master
+            BASE=$(git merge-base FETCH_HEAD HEAD)
+            if [ "$BASE" = "$(git rev-parse HEAD)" ]; then
+              gitleaks git --redact --verbose --log-opts="-n 50"
+            else
+              gitleaks git --redact --verbose --log-opts="$BASE..HEAD"
+            fi
+          no_output_timeout: 20m
+
   build:
     docker:
       - image: ruby:3.4.8
@@ -80,12 +105,14 @@ workflows:
   build-test-release:
     jobs:
       - build
+      - secret-scan
       - release_rules
       - pr_rules
       - release_please:
           context: loop-client-release-please
           requires:
             - build
+            - secret-scan
             - release_rules
             - pr_rules
           serial-group: << pipeline.project.slug >>/release-please
