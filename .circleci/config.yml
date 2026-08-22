@@ -110,6 +110,9 @@ jobs:
             "$RELEASE_PLEASE" github-release "${ARGS[@]}"
             "$RELEASE_PLEASE" release-pr "${ARGS[@]}"
       - run:
+          name: Branch the published release so Heroku can deploy it
+          command: node .release/create-release-branch.mjs
+      - run:
           name: Resolve Jira keys in the published release notes
           command: node .release/linkify-release-notes.mjs
 

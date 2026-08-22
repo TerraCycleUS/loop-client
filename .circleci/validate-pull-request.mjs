@@ -15,7 +15,7 @@ const PREFIX = new RegExp(`^(?:${ALLOWED_TYPES.join('|')})${SCOPE}: (?:${KEYS} )
 const ANY_KEY = new RegExp(KEY, 'i')
 
 const BRANCH = new RegExp(`^${JIRA_PROJECT}-\\d+-[a-z0-9]+(?:[-_][a-z0-9]+)*$`)
-const BRANCH_EXEMPT = [/^master$/, /^release-please--/, /^dependabot\//, /^revert-\d+-/]
+const BRANCH_EXEMPT = [/^master$/, /^v\d+\.\d+\.\d+$/, /^release-please--/, /^dependabot\//, /^revert-\d+-/]
 
 const PLACEHOLDERS = { scope: '(?:\\([^)]+\\))?', component: '(?: \\S+)?', version: '\\d+\\.\\d+\\.\\d+' }
 
@@ -78,7 +78,7 @@ function selfTest(exempt) {
   reject('feat(api): add request retries')
   reject('chore(master): prepare')
 
-  for (const branch of ['ITG-123-add-request-retries', 'ITG-1-fix', 'master',
+  for (const branch of ['ITG-123-add-request-retries', 'ITG-1-fix', 'master', 'v1.0.2', 'v10.20.30',
     'release-please--branches--master--components--loop_client',
     'dependabot/bundler/rack-3.1.0', 'revert-8-maintenance/release-please-circleci']) {
     assert.deepEqual(branchErrors(branch), [], `should accept branch: ${branch}`)
