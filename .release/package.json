@@ -1,0 +1,7 @@
+{
+  "name": "loop-client-release-tooling",
+  "private": true,
+  "dependencies": {
+    "release-please": "17.11.1"
+  }
+}

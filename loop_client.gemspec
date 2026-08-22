@@ -19,10 +19,16 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = spec.homepage
   spec.metadata['rubygems_mfa_required'] = 'true'
 
+  unpackaged = %r{
+    \A(?:
+      (?:bin|test|spec|features)/
+      |release-please-config\.json
+      |\.(?:git|circleci|idea|release)
+    )
+  }x
+
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      (f == __FILE__) || f.match(%r{\A(?:(?:bin|test|spec|features)/|\.(?:git|circleci|idea))})
-    end
+    `git ls-files -z`.split("\x0").reject { |f| (f == __FILE__) || f.match(unpackaged) }
   end
   spec.bindir = 'exe'
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }

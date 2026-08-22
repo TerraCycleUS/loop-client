@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   build:
     docker:
@@ -11,3 +12,45 @@ jobs:
             gem install bundler
             bundle install
             bundle exec rake
+
+  release_please:
+    docker:
+      - image: cimg/node:22.18.0
+    steps:
+      - checkout
+      - run:
+          name: Install pinned release tooling
+          command: npm ci --prefix .release
+      - run:
+          name: Publish a merged release pull request and prepare the next release
+          command: |
+            set -euo pipefail
+
+            : "${RELEASE_PLEASE_TOKEN:?RELEASE_PLEASE_TOKEN is required}"
+
+            RELEASE_PLEASE=".release/node_modules/.bin/release-please"
+
+            ARGS=(
+              --token="$RELEASE_PLEASE_TOKEN"
+              --repo-url="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+              --target-branch="master"
+              --config-file="release-please-config.json"
+              --manifest-file=".release-please-manifest.json"
+            )
+
+            "$RELEASE_PLEASE" github-release "${ARGS[@]}"
+            "$RELEASE_PLEASE" release-pr "${ARGS[@]}"
+
+workflows:
+  build-test-release:
+    jobs:
+      - build
+      - release_please:
+          context: loop-client-release-please
+          requires:
+            - build
+          serial-group: << pipeline.project.slug >>/release-please
+          filters:
+            branches:
+              only:
+                - master
