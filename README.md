@@ -67,7 +67,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
-GitHub releases are prepared through a reviewable Release Please pull request after the required CircleCI checks pass. Review and edit the generated changelog before merging the release pull request. See [the release process](docs/operations/release-process.md) for version rules and activation requirements.
+GitHub releases are prepared through a reviewable Release Please pull request after the required CircleCI checks pass. Review and edit the generated changelog before merging the release pull request.
 
 RubyGems publishing is not currently part of the release workflow. Do not run `bundle exec rake release`, because Git tags are managed by Release Please.
 

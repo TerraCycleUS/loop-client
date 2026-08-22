@@ -4,17 +4,18 @@
 
 ## Jira
 
-- Related: ITG-... or N/A
+- ITG-
 
 ## Release impact
 
-- [ ] Breaking change
-- [ ] Feature
-- [ ] Fix or performance improvement
-- [ ] Maintenance
-- [ ] No user-visible release impact
+- [ ] Breaking change — major
+- [ ] Feature — minor
+- [ ] Anything else — patch
+
+Every type reaches the release notes; nothing ships silently.
 
 ## Verification
 
 - [ ] Tests pass
-- [ ] Pull request title follows `type(scope): [ITG-123][ITG-999] lowercase summary` when Jira applies
+- [ ] Branch is named `ITG-123-short-description`
+- [ ] Title reads `type(scope): [ITG-123] lowercase summary`

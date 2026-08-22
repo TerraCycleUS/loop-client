@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 const scriptDirectory = dirname(fileURLToPath(import.meta.url))
 const manifestPath = resolve(
   scriptDirectory,
-  '../.release/node_modules/release-please/build/src/manifest.js',
+  './node_modules/release-please/build/src/manifest.js',
 )
 const originalCall = '            await this.github.commentOnIssue(comment, pullRequest.number);'
 const replacement =

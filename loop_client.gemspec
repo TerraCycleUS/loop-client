@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   unpackaged = %r{
     \A(?:
-      (?:bin|test|spec|features|scripts)/
+      (?:bin|test|spec|features)/
       |release-please-config\.json
       |\.(?:git|circleci|idea|release)
     )

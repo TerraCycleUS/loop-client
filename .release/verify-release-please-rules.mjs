@@ -1,15 +1,15 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
-import { DefaultChangelogNotes } from '../.release/node_modules/release-please/build/src/changelog-notes/default.js'
-import { parseConventionalCommits } from '../.release/node_modules/release-please/build/src/commit.js'
-import { buildStrategy } from '../.release/node_modules/release-please/build/src/factory.js'
-import { Manifest } from '../.release/node_modules/release-please/build/src/manifest.js'
-import { GemfileLock } from '../.release/node_modules/release-please/build/src/updaters/ruby/gemfile-lock.js'
-import { VersionRB } from '../.release/node_modules/release-please/build/src/updaters/ruby/version-rb.js'
-import { PullRequestTitle } from '../.release/node_modules/release-please/build/src/util/pull-request-title.js'
-import { Version } from '../.release/node_modules/release-please/build/src/version.js'
-import { DefaultVersioningStrategy } from '../.release/node_modules/release-please/build/src/versioning-strategies/default.js'
+import { DefaultChangelogNotes } from './node_modules/release-please/build/src/changelog-notes/default.js'
+import { parseConventionalCommits } from './node_modules/release-please/build/src/commit.js'
+import { buildStrategy } from './node_modules/release-please/build/src/factory.js'
+import { Manifest } from './node_modules/release-please/build/src/manifest.js'
+import { GemfileLock } from './node_modules/release-please/build/src/updaters/ruby/gemfile-lock.js'
+import { VersionRB } from './node_modules/release-please/build/src/updaters/ruby/version-rb.js'
+import { PullRequestTitle } from './node_modules/release-please/build/src/util/pull-request-title.js'
+import { Version } from './node_modules/release-please/build/src/version.js'
+import { DefaultVersioningStrategy } from './node_modules/release-please/build/src/versioning-strategies/default.js'
 
 const config = JSON.parse(await readFile('release-please-config.json', 'utf8'))
 const manifestVersions = JSON.parse(await readFile('.release-please-manifest.json', 'utf8'))
@@ -122,18 +122,13 @@ const breaking = commit('fix(api)!: (ITG-123) replace the response contract')
 assert.equal(breaking.breaking, true)
 assert.equal(versioning.bump(currentVersion, [breaking]).toString(), expectedMajorVersion.toString())
 
-const choreNotes = await notesFor(
-  [commit('chore(tooling): (ITG-123) refresh development dependencies')],
-  expectedPatchVersion.toString(),
-)
-assert.equal(choreNotes.split('\n').length, 1)
-assert.doesNotMatch(choreNotes, /Chores/)
+for (const { type, section } of config['changelog-sections']) {
+  const typed = commit(`${type}(api): [ITG-123] do the thing`)
+  const notes = await notesFor([typed], expectedPatchVersion.toString())
 
-const build = commit('build(deps): [ITG-376] update gems')
-const buildNotes = await notesFor([build], expectedPatchVersion.toString())
-
-assert.equal(versioning.bump(currentVersion, [build]).toString(), expectedPatchVersion.toString())
-assert.match(buildNotes, /Build System/)
+  assert.match(notes, new RegExp(`### ${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `${type} must appear as ${section}`)
+  assert.notEqual(versioning.bump(currentVersion, [typed]).toString(), currentVersion.toString(), `${type} must release`)
+}
 
 const updatedVersionSource = new VersionRB({ version: expectedPatchVersion }).updateContent(versionSource)
 const updatedGemfileLock = new GemfileLock({
@@ -145,7 +140,7 @@ assert.match(updatedVersionSource, new RegExp(`VERSION = ['\"]${expectedPatchVer
 assert.match(updatedGemfileLock, new RegExp(`loop_client \\(${expectedPatchVersion.toString()}\\)`))
 
 console.log(
-  'Release rules verified: maintenance and build=patch, feat=minor, breaking=major, hidden types=no release pull request.',
+  `Release rules verified: feat=minor, breaking=major, every one of the ${config['changelog-sections'].length} types releases and is listed.`,
 )
 console.log('Ruby updates verified: version.rb and Gemfile.lock use the same release version.')
 console.log('\nMaintenance fixture preview:\n')
