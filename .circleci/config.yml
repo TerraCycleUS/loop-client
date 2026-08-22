@@ -37,6 +37,17 @@ jobs:
           name: Verify release rules
           command: node scripts/verify-release-please-rules.mjs
 
+  title_rules:
+    docker:
+      - image: ruby:3.4.8
+    steps:
+      - checkout
+      - run:
+          name: Verify pull request title rules
+          command: |
+            ruby scripts/validate_pull_request_title.rb --self-test
+            ruby scripts/validate_pull_request_title.rb
+
   release_please:
     docker:
       - image: cimg/node:22.18.0
@@ -66,11 +77,13 @@ workflows:
     jobs:
       - build
       - release_rules
+      - title_rules
       - release_please:
           context: loop-client-release-please
           requires:
             - build
             - release_rules
+            - title_rules
           serial-group: << pipeline.project.slug >>/release-please
           filters:
             branches:
