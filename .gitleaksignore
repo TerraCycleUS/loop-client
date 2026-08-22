@@ -1,0 +1,12 @@
+# gitleaks fingerprint allowlist — pre-existing findings only.
+#
+# Every entry below was already in git history when secret scanning was
+# introduced (ITG-171). They are silenced so the CI gate can be enforced,
+# and are tracked for triage/rotation/history purge under that ticket.
+#
+# DO NOT extend this file to silence a new leak: remove the secret and
+# rotate it instead. A genuine false positive belongs inline, as a
+# `gitleaks:allow` comment on the flagged line.
+#
+# Format: <commit>:<file>:<rule-id>:<line>
+ca2eab82dc0cf3a9f7ebae4b5af7168d9ba927b3:README.md:generic-api-key:44

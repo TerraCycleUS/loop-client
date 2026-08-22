@@ -74,3 +74,24 @@ RubyGems publishing is not currently part of the release workflow. Do not run `b
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/TerraCycleUS/loop-client.
+
+## Secret scanning
+
+The repository is guarded by [gitleaks](https://github.com/gitleaks/gitleaks):
+
+- **Pre-commit hook** (`.githooks/pre-commit`) scans staged changes and blocks
+  the commit when a secret is detected. `bin/setup` enables the hook; in a
+  clone where it has not been run yet:
+
+  ```sh
+  brew install gitleaks
+  git config core.hooksPath .githooks
+  ```
+
+- **CI hard gate**: the `secret-scan` CircleCI job runs on every branch and fails
+  the pipeline on any leak in the commits that branch adds on top of `master`.
+
+Findings that pre-date secret scanning are allowlisted by fingerprint in
+`.gitleaksignore` and are tracked for rotation. Never add a fingerprint there to
+silence a fresh leak — remove the secret and rotate it instead. A genuine false
+positive is suppressed inline with a `gitleaks:allow` comment on the flagged line.
