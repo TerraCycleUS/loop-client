@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 
+import { json } from './github.mjs'
 import { addedLines, verifyLinks, withJiraLinks } from './jira-links.mjs'
 
 const CHANGELOG = 'CHANGELOG.md'
@@ -7,19 +8,6 @@ const MESSAGE = 'chore(master): link jira keys in the changelog'
 
 export function releasePullRequest(pulls) {
   return pulls.find(pull => pull.head?.ref?.startsWith('release-please--')) ?? null
-}
-
-async function api(path, options = {}) {
-  const response = await fetch(`https://api.github.com/repos/${repository}${path}`, {
-    ...options,
-    headers: {
-      Accept: 'application/vnd.github+json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  })
-  if (!response.ok) throw new Error(`GitHub returned ${response.status} for ${path}`)
-  return response.json()
 }
 
 function selfTest() {
@@ -38,18 +26,15 @@ if (process.argv.includes('--self-test')) {
 }
 
 const dryRun = process.argv.includes('--dry-run')
-const token = process.env.RELEASE_PLEASE_TOKEN
-const repository = process.env.RELEASE_REPOSITORY ??
-  `${process.env.CIRCLE_PROJECT_USERNAME}/${process.env.CIRCLE_PROJECT_REPONAME}`
 
-const pull = releasePullRequest(await api('/pulls?state=open&per_page=100'))
+const pull = releasePullRequest(await json('/pulls?state=open&per_page=100'))
 if (!pull) {
   console.log('No open release pull request; nothing to link.')
   process.exit(0)
 }
 
 const branch = pull.head.ref
-const file = await api(`/contents/${CHANGELOG}?ref=${encodeURIComponent(branch)}`).catch(() => null)
+const file = await json(`/contents/${CHANGELOG}?ref=${encodeURIComponent(branch)}`).catch(() => null)
 if (!file) {
   console.log(`#${pull.number}: ${CHANGELOG} is missing on ${branch}; nothing to link.`)
   process.exit(0)
@@ -67,7 +52,7 @@ if (dryRun) {
   process.exit(0)
 }
 
-await api(`/contents/${CHANGELOG}`, {
+await json(`/contents/${CHANGELOG}`, {
   method: 'PUT',
   body: JSON.stringify({
     branch,

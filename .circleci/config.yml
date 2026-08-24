@@ -1,5 +1,10 @@
 version: 2.1
 
+executors:
+  node:
+    docker:
+      - image: cimg/node:22.18.0
+
 commands:
   install_release_tooling:
     steps:
@@ -60,8 +65,7 @@ jobs:
           command: bundle exec rake
 
   release_rules:
-    docker:
-      - image: cimg/node:22.18.0
+    executor: node
     steps:
       - checkout
       - install_release_tooling
@@ -73,8 +77,7 @@ jobs:
             node .release/linkify-changelog.mjs --self-test
 
   pr_rules:
-    docker:
-      - image: cimg/node:22.18.0
+    executor: node
     steps:
       - checkout
       - run:
@@ -88,8 +91,7 @@ jobs:
   # Keep it in the context, never as a project-level variable — this repository is public
   # and project-level variables reach every job, including those on pull request branches.
   release_please:
-    docker:
-      - image: cimg/node:22.18.0
+    executor: node
     steps:
       - checkout
       - install_release_tooling

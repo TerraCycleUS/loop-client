@@ -4,26 +4,29 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const JIRA_PROJECT = process.env.JIRA_PROJECT ?? 'ITG'
-const ALLOWED_TYPES = (process.env.ALLOWED_TYPES ?? 'build,chore,ci,docs,feat,fix,maintenance,perf,refactor,revert,style,test').split(',')
 
 const KEY = `${JIRA_PROJECT}-\\d+`
 const SCOPE = '(?:\\([a-z0-9][a-z0-9._/-]*\\))?!?'
 const KEYS = `(?:\\[${KEY}\\])+`
-const TITLE = new RegExp(`^(?:${ALLOWED_TYPES.join('|')})${SCOPE}: ${KEYS} [a-z].+$`)
-const REVERT = new RegExp(`^revert${SCOPE}: ${KEYS} "[^"]+"$`)
-const PREFIX = new RegExp(`^(?:${ALLOWED_TYPES.join('|')})${SCOPE}: (?:${KEYS} )?`)
 const ANY_KEY = new RegExp(KEY, 'i')
 
 const BRANCH = new RegExp(`^${JIRA_PROJECT}-\\d+-[a-z0-9]+(?:[-_][a-z0-9]+)*$`)
 const BRANCH_EXEMPT = [/^master$/, /^v\d+\.\d+\.\d+$/, /^release-please--/, /^dependabot\//, /^revert-\d+-/]
 
+const CONFIG_PATH = resolve(dirname(fileURLToPath(import.meta.url)), '../release-please-config.json')
 const PLACEHOLDERS = { scope: '(?:\\([^)]+\\))?', component: '(?: \\S+)?', version: '\\d+\\.\\d+\\.\\d+' }
 
-async function releaseTitlePattern() {
+function allowedTypes(config) {
+  if (process.env.ALLOWED_TYPES) return process.env.ALLOWED_TYPES.split(',')
+
+  const types = (config['changelog-sections'] ?? []).map(section => section.type)
+  assert.ok(types.length, `No changelog-sections in ${CONFIG_PATH}; the allowed commit types are read from there.`)
+  return types
+}
+
+function exemptPattern(config) {
   if (process.env.TITLE_EXEMPT_PATTERN) return new RegExp(process.env.TITLE_EXEMPT_PATTERN)
 
-  const path = resolve(dirname(fileURLToPath(import.meta.url)), '../release-please-config.json')
-  const config = await readFile(path, 'utf8').then(JSON.parse, () => ({}))
   const pattern = config['pull-request-title-pattern']
   if (!pattern) return /$^/
 
@@ -34,6 +37,17 @@ async function releaseTitlePattern() {
   return new RegExp(`^${source}$`)
 }
 
+export function rulesFrom(config) {
+  const types = allowedTypes(config).join('|')
+
+  return {
+    title: new RegExp(`^(?:${types})${SCOPE}: ${KEYS} [a-z].+$`),
+    revert: new RegExp(`^revert${SCOPE}: ${KEYS} "[^"]+"$`),
+    prefix: new RegExp(`^(?:${types})${SCOPE}: (?:${KEYS} )?`),
+    exempt: exemptPattern(config),
+  }
+}
+
 export function branchErrors(branch) {
   if (BRANCH_EXEMPT.some(rule => rule.test(branch)) || BRANCH.test(branch)) return []
 
@@ -41,23 +55,23 @@ export function branchErrors(branch) {
     'That name is what links the branch and its pull request to the issue.']
 }
 
-export function titleErrors(title, exempt) {
-  if (exempt.test(title)) return []
+export function titleErrors(title, rules) {
+  if (rules.exempt.test(title)) return []
 
   const errors = []
-  if (!TITLE.test(title) && !REVERT.test(title)) {
+  if (!rules.title.test(title) && !rules.revert.test(title)) {
     errors.push('Use type(scope): [ITG-123] lowercase summary with an allowed Conventional Commit type.')
   }
-  if (ANY_KEY.test(title.replace(PREFIX, ''))) {
+  if (ANY_KEY.test(title.replace(rules.prefix, ''))) {
     errors.push(`Put every Jira key in the prefix group: [${JIRA_PROJECT}-123][${JIRA_PROJECT}-999] summary. ` +
       'A key may not sit in the scope or inside the summary.')
   }
   return errors
 }
 
-function selfTest(exempt) {
-  const accept = title => assert.deepEqual(titleErrors(title, exempt), [], `should accept: ${title}`)
-  const reject = title => assert.notEqual(titleErrors(title, exempt).length, 0, `should reject: ${title}`)
+function selfTest(rules) {
+  const accept = title => assert.deepEqual(titleErrors(title, rules), [], `should accept: ${title}`)
+  const reject = title => assert.notEqual(titleErrors(title, rules).length, 0, `should reject: ${title}`)
 
   accept('maintenance(deps): [ITG-123][ITG-999] update dependencies')
   accept('feat(api): [ITG-123] add request retries')
@@ -107,10 +121,10 @@ async function pullRequestTitle() {
   return (await response.json()).title
 }
 
-const exempt = await releaseTitlePattern()
+const rules = rulesFrom(await readFile(CONFIG_PATH, 'utf8').then(JSON.parse, () => ({})))
 
 if (process.argv.includes('--self-test')) {
-  selfTest(exempt)
+  selfTest(rules)
   console.log('Pull request rules verified.')
   process.exit(0)
 }
@@ -127,7 +141,7 @@ if (branch) {
 
 const title = await pullRequestTitle()
 if (title) {
-  failures.push(...titleErrors(title, exempt).map(error => `${title}: ${error}`))
+  failures.push(...titleErrors(title, rules).map(error => `${title}: ${error}`))
 } else {
   console.log('No pull request context detected; title validation skipped.')
 }

@@ -1,24 +1,4 @@
-const token = process.env.RELEASE_PLEASE_TOKEN
-const repository = process.env.RELEASE_REPOSITORY ??
-  `${process.env.CIRCLE_PROJECT_USERNAME}/${process.env.CIRCLE_PROJECT_REPONAME}`
-
-async function api(path, options = {}) {
-  const response = await fetch(`https://api.github.com/repos/${repository}${path}`, {
-    ...options,
-    headers: {
-      Accept: 'application/vnd.github+json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  })
-  return response
-}
-
-async function json(path) {
-  const response = await api(path)
-  if (!response.ok) throw new Error(`GitHub returned ${response.status} for ${path}`)
-  return response.json()
-}
+import { json, request } from './github.mjs'
 
 const dryRun = process.argv.includes('--dry-run')
 
@@ -31,7 +11,7 @@ if (!release) {
 const tag = release.tag_name
 const { sha } = await json(`/commits/${tag}`)
 
-const existing = await api(`/git/ref/heads/${tag}`)
+const existing = await request(`/git/ref/heads/${tag}`)
 if (existing.ok) {
   console.log(`${tag}: branch already exists.`)
   process.exit(0)
@@ -42,7 +22,7 @@ if (dryRun) {
   process.exit(0)
 }
 
-const created = await api('/git/refs', {
+const created = await request('/git/refs', {
   method: 'POST',
   body: JSON.stringify({ ref: `refs/heads/${tag}`, sha }),
 })
