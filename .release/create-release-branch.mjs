@@ -1,8 +1,10 @@
-import { json, request } from './github.mjs'
+import { json, optionalJson, request, requireToken } from './github.mjs'
+
+requireToken()
 
 const dryRun = process.argv.includes('--dry-run')
 
-const release = await json('/releases/latest').catch(() => null)
+const release = await optionalJson('/releases/latest')
 if (!release) {
   console.log('No published release yet; no branch to create.')
   process.exit(0)

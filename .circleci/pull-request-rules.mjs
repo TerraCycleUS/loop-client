@@ -41,7 +41,7 @@ export function rulesFrom(config) {
   const types = allowedTypes(config).join('|')
 
   return {
-    title: new RegExp(`^(?:${types})${SCOPE}: ${KEYS} [a-z].+$`),
+    title: new RegExp(`^(?:${types})${SCOPE}: ${KEYS} (?![A-Z][a-z])\\S.+$`),
     revert: new RegExp(`^revert${SCOPE}: ${KEYS} "[^"]+"$`),
     prefix: new RegExp(`^(?:${types})${SCOPE}: (?:${KEYS} )?`),
     exempt: exemptPattern(config),
@@ -66,7 +66,10 @@ export function titleErrors(title, rules) {
   if (!rules.title.test(title) && !rules.revert.test(title)) {
     errors.push('Use type(scope): [ITG-123] lowercase summary with an allowed Conventional Commit type.')
   }
-  if (ANY_KEY.test(title.replace(rules.prefix, ''))) {
+  const summary = title.replace(rules.prefix, '')
+  // A revert quotes the original title, which carries its own key; only the rest counts.
+  const outsidePrefix = rules.revert.test(title) ? summary.replace(/"[^"]*"/, '') : summary
+  if (ANY_KEY.test(outsidePrefix)) {
     errors.push(`Put every Jira key in the prefix group: [${JIRA_PROJECT}-123][${JIRA_PROJECT}-999] summary. ` +
       'A key may not sit in the scope or inside the summary.')
   }

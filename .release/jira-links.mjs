@@ -10,7 +10,7 @@ export function withReferences(body) {
 
 export function withDefinitions(body) {
   const keys = [...new Set([...body.matchAll(REFERENCE)].map(match => match[1]))]
-  const missing = keys.filter(key => !body.includes(`\n[${key}]: `))
+  const missing = keys.filter(key => !new RegExp(`^\\[${key}\\]: `, 'm').test(body))
   if (!missing.length) return body
 
   const trimmed = body.replace(/\s+$/, '')

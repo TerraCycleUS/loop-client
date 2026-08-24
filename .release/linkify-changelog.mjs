@@ -1,8 +1,10 @@
-import { json, releasePullRequest } from './github.mjs'
+import { json, optionalJson, releasePullRequest, requireToken } from './github.mjs'
 import { addedLines, withJiraLinks } from './jira-links.mjs'
 
 const CHANGELOG = 'CHANGELOG.md'
 const MESSAGE = 'chore(master): link jira keys in the changelog'
+
+requireToken()
 
 const dryRun = process.argv.includes('--dry-run')
 
@@ -13,7 +15,7 @@ if (!pull) {
 }
 
 const branch = pull.head.ref
-const file = await json(`/contents/${CHANGELOG}?ref=${encodeURIComponent(branch)}`).catch(() => null)
+const file = await optionalJson(`/contents/${CHANGELOG}?ref=${encodeURIComponent(branch)}`)
 if (!file) {
   console.log(`#${pull.number}: ${CHANGELOG} is missing on ${branch}; nothing to link.`)
   process.exit(0)
