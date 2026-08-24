@@ -1,9 +1,11 @@
-import { json } from './github.mjs'
+import { json, optionalJson, requireToken } from './github.mjs'
 import { addedLines, withJiraLinks } from './jira-links.mjs'
+
+requireToken()
 
 const dryRun = process.argv.includes('--dry-run')
 
-const release = await json('/releases/latest').catch(() => null)
+const release = await optionalJson('/releases/latest')
 if (!release) {
   console.log('No published release yet; nothing to link.')
   process.exit(0)

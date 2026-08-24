@@ -51,4 +51,9 @@ assert.deepEqual(addedLines(loose, tightened), [
 ])
 assert.deepEqual(addedLines(tightened, tightened), [])
 
+assert.equal(
+  withJiraLinks('[ITG-1]: https://terracycle.atlassian.net/browse/ITG-1\n* [ITG-1] thing\n').match(/^\[ITG-1\]: /gm).length,
+  1,
+)
+
 console.log('Jira link rules verified.')

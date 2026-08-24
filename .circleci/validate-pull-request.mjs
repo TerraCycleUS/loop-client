@@ -8,11 +8,23 @@ async function pullRequestTitle() {
   if (!number) return null
 
   const repository = `${process.env.CIRCLE_PROJECT_USERNAME}/${process.env.CIRCLE_PROJECT_REPONAME}`
+  // Unauthenticated reads work while the repository is public, but share a per-IP rate
+  // limit with every other CircleCI job; a token, when present, lifts that.
+  const token = process.env.GITHUB_TOKEN
   const response = await fetch(`https://api.github.com/repos/${repository}/pulls/${number}`, {
-    headers: { Accept: 'application/vnd.github+json' },
+    headers: {
+      Accept: 'application/vnd.github+json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
   })
   if (response.status === 403 && response.headers.get('x-ratelimit-remaining') === '0') {
-    throw new Error('GitHub rejected the unauthenticated request: rate limit reached for this CircleCI IP. Rerun the job.')
+    throw new Error('GitHub rejected the request: rate limit reached for this CircleCI IP. Rerun the job.')
+  }
+  if (response.status === 404) {
+    throw new Error(`GitHub returned 404 for pull request ${number}. ` +
+      (token
+        ? 'GITHUB_TOKEN cannot read pull requests here; it needs a token with pull_requests:read.'
+        : 'If this repository is no longer public, the job needs a GITHUB_TOKEN with pull_requests:read.'))
   }
   if (!response.ok) throw new Error(`GitHub returned ${response.status} while reading pull request ${number}`)
   return (await response.json()).title
