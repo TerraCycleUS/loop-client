@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe LoopClient::ApiRequest do
-  # rubocop:disable RSpec/AnyInstance
+  # rubocop:disable-next RSpec/AnyInstance
   before do
     LoopClient.configure do |config|
       config.logger = Logger.new($stdout)
@@ -14,7 +14,6 @@ RSpec.describe LoopClient::ApiRequest do
 
     allow_any_instance_of(LoopClient::TokenFetcher).to receive(:token).and_return(token)
   end
-  # rubocop:enable RSpec/AnyInstance
 
   let(:loop_client_api) { LoopClient[:TDS] }
   let(:token) { '333' }
@@ -39,7 +38,7 @@ RSpec.describe LoopClient::ApiRequest do
 
   it 'calls post request' do
     stub_request(:post, "#{url}/")
-      .with(body: a_hash_including({ query: 'T' }), headers: headers)
+      .with(body: '{"query":"T"}', headers: headers)
       .to_return(status: 200, body: '{}')
 
     expect(loop_client_api.post(body: { query: 'T' }).status).to eq 200
@@ -47,7 +46,7 @@ RSpec.describe LoopClient::ApiRequest do
 
   it 'calls put request' do
     stub_request(:put, "#{url}/")
-      .with(body: a_hash_including({ query: 'T' }), headers: headers)
+      .with(body: '{"query":"T"}', headers: headers)
       .to_return(status: 200, body: '{}')
 
     expect(loop_client_api.put(body: { query: 'T' }).status).to eq 200
@@ -55,7 +54,7 @@ RSpec.describe LoopClient::ApiRequest do
 
   it 'calls patch request' do
     stub_request(:patch, "#{url}/")
-      .with(body: a_hash_including({ query: 'T' }), headers: headers)
+      .with(body: '{"query":"T"}', headers: headers)
       .to_return(status: 200, body: '{}')
 
     expect(loop_client_api.patch(body: { query: 'T' }).status).to eq 200

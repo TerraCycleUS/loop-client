@@ -22,17 +22,16 @@ module LoopClient
     attr_accessor :access_token
 
     def fetch
-      uri = URI("#{auth_url}oauth/token")
+      url = "#{auth_url}oauth/token"
+      connection = Connection.build(url: url, headers: { 'content-type' => 'application/json' })
+      response = connection.post(url, request_body)
 
-      connection = Faraday.new(
-        url: uri,
-        headers: { 'content-type' => 'application/json' }
-      ) do |f|
-        f.response :json, parser_options: { object_class: OpenStruct }
-      end
+      raise Error, "Auth0 returned #{response.status} for audience '#{audience}'" unless response.success?
 
-      response = connection.post(uri, request_body)
-      Token.new(response.body.access_token)
+      access_token = response.body.try(:access_token)
+      raise Error, "Auth0 returned no access_token for audience '#{audience}'" if access_token.blank?
+
+      Token.new(access_token)
     end
 
     def request_body
