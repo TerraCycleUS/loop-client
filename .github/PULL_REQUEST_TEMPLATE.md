@@ -4,7 +4,7 @@
 
 ## Jira
 
-- ITG-
+- https://terracycle.atlassian.net/browse/ITG-
 
 ## Release impact
 
