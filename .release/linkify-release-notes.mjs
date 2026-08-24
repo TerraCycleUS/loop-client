@@ -1,4 +1,4 @@
-import { verifyDefinitions, withDefinitions } from './jira-links.mjs'
+import { addedLines, verifyLinks, withJiraLinks } from './jira-links.mjs'
 
 async function api(path, options = {}) {
   const response = await fetch(`https://api.github.com/repos/${repository}${path}`, {
@@ -14,7 +14,7 @@ async function api(path, options = {}) {
 }
 
 if (process.argv.includes('--self-test')) {
-  verifyDefinitions()
+  verifyLinks()
   console.log('Release note linking verified.')
   process.exit(0)
 }
@@ -30,14 +30,14 @@ if (!release) {
   process.exit(0)
 }
 
-const body = withDefinitions(release.body ?? '')
+const body = withJiraLinks(release.body ?? '')
 if (body === release.body) {
   console.log(`${release.tag_name}: every Jira key already resolves.`)
   process.exit(0)
 }
 
 if (dryRun) {
-  console.log(`${release.tag_name} would gain:\n${body.slice(release.body.length)}`)
+  console.log(`${release.tag_name} would gain:\n${addedLines(release.body ?? '', body).join('\n')}`)
   process.exit(0)
 }
 

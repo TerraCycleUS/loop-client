@@ -49,6 +49,8 @@ A merged branch is deleted automatically. Every published release also gets a br
 
 Every Jira key in the release notes and in `CHANGELOG.md` resolves to `https://terracycle.atlassian.net/browse/<key>`. CI adds the Markdown link definitions after each release: to the published GitHub Release body, and to `CHANGELOG.md` on the open release pull request branch, so they land with the release commit.
 
+A key written any other way — `(ITG-123)`, or bare in the summary — is rewritten to `[ITG-123]` first, so older entries resolve too.
+
 The definitions sit at the bottom of `CHANGELOG.md` and cover the whole file. Leave them there — Release Please prepends each new section and never rewrites the tail.
 
 ## Merge strategy

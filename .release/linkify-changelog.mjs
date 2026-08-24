@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 
-import { verifyDefinitions, withDefinitions } from './jira-links.mjs'
+import { addedLines, verifyLinks, withJiraLinks } from './jira-links.mjs'
 
 const CHANGELOG = 'CHANGELOG.md'
 const MESSAGE = 'chore(master): link jira keys in the changelog'
@@ -23,7 +23,7 @@ async function api(path, options = {}) {
 }
 
 function selfTest() {
-  verifyDefinitions()
+  verifyLinks()
 
   const release = { number: 42, head: { ref: 'release-please--branches--master--components--loop_client' } }
   assert.equal(releasePullRequest([]), null)
@@ -56,14 +56,14 @@ if (!file) {
 }
 
 const current = Buffer.from(file.content, 'base64').toString('utf8')
-const linked = withDefinitions(current)
+const linked = withJiraLinks(current)
 if (linked === current) {
   console.log(`#${pull.number}: every Jira key in ${CHANGELOG} already resolves.`)
   process.exit(0)
 }
 
 if (dryRun) {
-  console.log(`#${pull.number} would gain:\n${linked.slice(current.replace(/\s+$/, '').length)}`)
+  console.log(`#${pull.number} would rewrite ${CHANGELOG}:\n${addedLines(current, linked).join('\n')}`)
   process.exit(0)
 }
 
