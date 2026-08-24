@@ -86,10 +86,10 @@ jobs:
             node .circleci/pull-request-rules.test.mjs
             node .circleci/validate-pull-request.mjs
 
-  # RELEASE_PLEASE_TOKEN comes from the loop-client-release-please context, fine-grained
-  # to this repository: metadata read, contents/pull requests/issues read and write.
-  # Keep it in the context, never as a project-level variable — this repository is public
-  # and project-level variables reach every job, including those on pull request branches.
+  # RELEASE_PLEASE_TOKEN comes from the tc-loop-release-please context, shared by the TC
+  # and Loop repositories. Only this job may carry it: it is the one job restricted to
+  # master. Every other job runs on branch code, and this repository is public, so a
+  # token reachable from them would be a token any contributor could exfiltrate.
   release_please:
     executor: node
     steps:
@@ -130,7 +130,7 @@ workflows:
       - release_rules
       - pr_rules
       - release_please:
-          context: loop-client-release-please
+          context: tc-loop-release-please
           requires:
             - build
             - secret-scan
