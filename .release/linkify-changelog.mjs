@@ -1,29 +1,8 @@
-import assert from 'node:assert/strict'
-
-import { json } from './github.mjs'
-import { addedLines, verifyLinks, withJiraLinks } from './jira-links.mjs'
+import { json, releasePullRequest } from './github.mjs'
+import { addedLines, withJiraLinks } from './jira-links.mjs'
 
 const CHANGELOG = 'CHANGELOG.md'
 const MESSAGE = 'chore(master): link jira keys in the changelog'
-
-export function releasePullRequest(pulls) {
-  return pulls.find(pull => pull.head?.ref?.startsWith('release-please--')) ?? null
-}
-
-function selfTest() {
-  verifyLinks()
-
-  const release = { number: 42, head: { ref: 'release-please--branches--master--components--loop_client' } }
-  assert.equal(releasePullRequest([]), null)
-  assert.equal(releasePullRequest([{ head: { ref: 'ITG-409-link-jira-keys' } }]), null)
-  assert.equal(releasePullRequest([{ head: {} }, { head: { ref: 'ITG-1-x' } }, release]), release)
-}
-
-if (process.argv.includes('--self-test')) {
-  selfTest()
-  console.log('Changelog linking verified.')
-  process.exit(0)
-}
 
 const dryRun = process.argv.includes('--dry-run')
 

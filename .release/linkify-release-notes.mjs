@@ -1,11 +1,5 @@
 import { json } from './github.mjs'
-import { addedLines, verifyLinks, withJiraLinks } from './jira-links.mjs'
-
-if (process.argv.includes('--self-test')) {
-  verifyLinks()
-  console.log('Release note linking verified.')
-  process.exit(0)
-}
+import { addedLines, withJiraLinks } from './jira-links.mjs'
 
 const dryRun = process.argv.includes('--dry-run')
 

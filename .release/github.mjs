@@ -18,3 +18,7 @@ export async function json(path, options = {}) {
   if (!response.ok) throw new Error(`GitHub returned ${response.status} for ${path}`)
   return response.json()
 }
+
+export function releasePullRequest(pulls) {
+  return pulls.find(pull => pull.head?.ref?.startsWith('release-please--')) ?? null
+}
