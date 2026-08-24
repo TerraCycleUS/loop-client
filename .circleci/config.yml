@@ -70,6 +70,7 @@ jobs:
           command: |
             node .release/verify-release-please-rules.mjs
             node .release/linkify-release-notes.mjs --self-test
+            node .release/linkify-changelog.mjs --self-test
 
   pr_rules:
     docker:
@@ -115,6 +116,9 @@ jobs:
       - run:
           name: Resolve Jira keys in the published release notes
           command: node .release/linkify-release-notes.mjs
+      - run:
+          name: Resolve Jira keys in the release pull request changelog
+          command: node .release/linkify-changelog.mjs
 
 workflows:
   build-test-release:

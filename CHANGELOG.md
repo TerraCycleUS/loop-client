@@ -58,3 +58,6 @@
 ### Miscellaneous Chores
 
 * **client:** add ruby-lsp to development dependencies ([2e863ba](https://github.com/TerraCycleUS/loop-client/commit/2e863ba5b25d80576df08172c8c0f8bf0def33e1))
+
+[ITG-409]: https://terracycle.atlassian.net/browse/ITG-409
+[ITG-171]: https://terracycle.atlassian.net/browse/ITG-171

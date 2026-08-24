@@ -1,33 +1,4 @@
-import assert from 'node:assert/strict'
-
-const JIRA_PROJECT = process.env.JIRA_PROJECT ?? 'ITG'
-const JIRA_BROWSE_URL = process.env.JIRA_BROWSE_URL ?? 'https://terracycle.atlassian.net/browse'
-const REFERENCE = new RegExp(`\\[(${JIRA_PROJECT}-\\d+)\\]`, 'g')
-
-export function withDefinitions(body) {
-  const keys = [...new Set([...body.matchAll(REFERENCE)].map(match => match[1]))]
-  const missing = keys.filter(key => !body.includes(`\n[${key}]: `))
-  if (!missing.length) return body
-
-  const definitions = missing.map(key => `[${key}]: ${JIRA_BROWSE_URL}/${key}`).join('\n')
-  return `${body.replace(/\s+$/, '')}\n\n${definitions}\n`
-}
-
-function selfTest() {
-  const plain = '### Features\n\n* **api:** [ITG-1] add retries\n'
-  assert.equal(
-    withDefinitions(plain),
-    '### Features\n\n* **api:** [ITG-1] add retries\n\n[ITG-1]: https://terracycle.atlassian.net/browse/ITG-1\n',
-  )
-
-  const twice = '* [ITG-1] one\n* [ITG-1] two\n* [ITG-2] three\n'
-  const linked = withDefinitions(twice)
-  assert.equal(linked.match(/^\[ITG-1\]: /gm).length, 1)
-  assert.equal(linked.match(/^\[ITG-2\]: /gm).length, 1)
-
-  assert.equal(withDefinitions(linked), linked)
-  assert.equal(withDefinitions('* no keys here\n'), '* no keys here\n')
-}
+import { verifyDefinitions, withDefinitions } from './jira-links.mjs'
 
 async function api(path, options = {}) {
   const response = await fetch(`https://api.github.com/repos/${repository}${path}`, {
@@ -43,7 +14,7 @@ async function api(path, options = {}) {
 }
 
 if (process.argv.includes('--self-test')) {
-  selfTest()
+  verifyDefinitions()
   console.log('Release note linking verified.')
   process.exit(0)
 }
