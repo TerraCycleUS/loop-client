@@ -19,7 +19,7 @@ maintenance(deps): [ITG-123] update dependencies
 revert: [ITG-123] "feat(api): add request retries"
 ```
 
-Allowed types are `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `maintenance`, `perf`, `refactor`, `revert`, `style`, and `test`.
+Allowed types are `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `maintenance`, `perf`, `refactor`, `revert`, `style`, and `test`. CI reads that list from the `changelog-sections` of `release-please-config.json`, so a type added there is accepted without touching the checks.
 
 Release impact:
 
