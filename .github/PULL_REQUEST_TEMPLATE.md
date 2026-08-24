@@ -1,21 +1,21 @@
 ## Summary
 
+<!-- What changed and why, in a line or two. -->
+
+## Changes
+
+<!-- One line per change; name the file or area first. -->
+
+- 
+
+## Testing
+
+<!-- What you ran and what it reported. -->
+
 - 
 
 ## Jira
 
+<!-- One line per issue; a pull request may close several. -->
+
 - https://terracycle.atlassian.net/browse/ITG-
-
-## Release impact
-
-- [ ] Breaking change — major
-- [ ] Feature — minor
-- [ ] Anything else — patch
-
-Every type reaches the release notes; nothing ships silently.
-
-## Verification
-
-- [ ] Tests pass
-- [ ] Branch is named `ITG-123-short-description`
-- [ ] Title reads `type(scope): [ITG-123] lowercase summary`
