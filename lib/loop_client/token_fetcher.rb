@@ -40,7 +40,7 @@ module LoopClient
         client_secret: client_secret,
         audience: audience,
         grant_type: 'client_credentials'
-      }.to_json
+      }
     end
 
     def cache_key
