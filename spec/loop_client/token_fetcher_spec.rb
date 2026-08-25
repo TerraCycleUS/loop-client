@@ -11,11 +11,10 @@ RSpec.describe LoopClient::TokenFetcher do
   let(:access_token) { Helpers::JWT_ACCESS_TOKEN }
   let(:token) { LoopClient::Token.new(access_token) }
 
-  # rubocop:disable RSpec/AnyInstance
+  # rubocop:disable-next RSpec/AnyInstance
   before do
     allow_any_instance_of(LoopClient::Token).to receive(:expiration).and_return(Time.now.to_i + 120)
   end
-  # rubocop:enable RSpec/AnyInstance
 
   describe 'attr_readers' do
     it { expect(token_fetcher.auth_url).to eq 'https://auth.com/' }
@@ -65,12 +64,11 @@ RSpec.describe LoopClient::TokenFetcher do
         allow(LoopClient).to receive(:configuration).and_return(configuration.new(cache_store))
       end
 
-      # rubocop:disable RSpec/AnyInstance
+      # rubocop:disable-next RSpec/AnyInstance
       it 'calls fetch to get a new token' do
         allow_any_instance_of(described_class).to receive(:fetch).and_return(token)
         expect(token_fetcher.token).to eq(token)
       end
-      # rubocop:enable RSpec/AnyInstance
     end
   end
 
@@ -115,6 +113,34 @@ RSpec.describe LoopClient::TokenFetcher do
 
     it 'fetches token from Auth0' do
       expect(token_fetcher.send(:fetch)).to eq token
+    end
+
+    context 'when Auth0 rejects the request' do
+      before do
+        stub_request(:post, 'https://auth.com/oauth/token')
+          .to_return(status: 401,
+                     body: { error: 'access_denied' }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'raises with the status and the audience' do
+        expect { token_fetcher.send(:fetch) }
+          .to raise_error LoopClient::Error, "Auth0 returned 401 for audience 'audience'"
+      end
+    end
+
+    context 'when Auth0 responds without an access token' do
+      before do
+        stub_request(:post, 'https://auth.com/oauth/token')
+          .to_return(status: 200,
+                     body: { token_type: 'Bearer' }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'raises rather than building a token from nil' do
+        expect { token_fetcher.send(:fetch) }
+          .to raise_error LoopClient::Error, "Auth0 returned no access_token for audience 'audience'"
+      end
     end
   end
 end

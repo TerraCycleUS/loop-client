@@ -11,14 +11,15 @@ if (!release) {
   process.exit(0)
 }
 
-const body = withJiraLinks(release.body ?? '')
-if (body === release.body) {
+const current = release.body ?? ''
+const body = withJiraLinks(current)
+if (body === current) {
   console.log(`${release.tag_name}: every Jira key already resolves.`)
   process.exit(0)
 }
 
 if (dryRun) {
-  console.log(`${release.tag_name} would gain:\n${addedLines(release.body ?? '', body).join('\n')}`)
+  console.log(`${release.tag_name} would gain:\n${addedLines(current, body).join('\n')}`)
   process.exit(0)
 }
 

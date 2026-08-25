@@ -8,7 +8,18 @@ requireToken()
 
 const dryRun = process.argv.includes('--dry-run')
 
-const pull = releasePullRequest(await json('/pulls?state=open&per_page=100'))
+// One page holds 100 pull requests; dependabot alone can push the release one off it.
+async function openReleasePullRequest() {
+  for (let page = 1; page <= 10; page += 1) {
+    const pulls = await json(`/pulls?state=open&per_page=100&page=${page}`)
+    const pull = releasePullRequest(pulls)
+    if (pull) return pull
+    if (pulls.length < 100) return null
+  }
+  return null
+}
+
+const pull = await openReleasePullRequest()
 if (!pull) {
   console.log('No open release pull request; nothing to link.')
   process.exit(0)

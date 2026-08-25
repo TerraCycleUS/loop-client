@@ -67,8 +67,8 @@ module LoopClient
     end
 
     def request(method:, params: nil, body: nil)
-      path = build_path_and_reset
       started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      path = build_path_and_reset
 
       api_request = ApiRequest.new \
         token_fetcher: token_fetcher,

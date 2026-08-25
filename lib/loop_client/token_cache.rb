@@ -4,6 +4,7 @@ module LoopClient
   class TokenCache
     def self.fetch(key)
       cache_store = LoopClient.configuration.cache_store
+      raise Error, 'cache_store is not configured' if cache_store.nil?
 
       access_token = cache_store.read(key)
 

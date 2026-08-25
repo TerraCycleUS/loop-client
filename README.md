@@ -49,6 +49,7 @@ end
 | `cache_store` | Where access tokens are cached. Must respond to `read(key)` and `write(key, value, expires_at:)` — `Rails.cache` and `solid_cache` both qualify. |
 | `auth_url` | Auth0 tenant URL. **Must end with a slash**: the token endpoint is built as `"#{auth_url}oauth/token"`. |
 | `client_id`, `client_secret` | Auth0 machine-to-machine application credentials. |
+| `timeout`, `open_timeout` | Seconds before a request, or its connection attempt, is given up on. Default 30 and 5. |
 | `add_api(key, url:, audience:)` | Registers one service. Both `url` and `audience` are required; a blank value raises `LoopClient::Error`. |
 
 `LoopClient.reset!` clears the configuration and every memoised API object. It is meant for test suites.
@@ -72,14 +73,14 @@ Method names are downcased, arguments are appended as-is, and the finished path 
 ```ruby
 LoopClient[:DMS].api.v1.deposits.get(params: { country: 'USA' })
 LoopClient[:CoMS].api.v1.containers('identity_code').freeup.put
-LoopClient[:TDS].api.v1.shipments.post(body: { reference: 'ABC' }.to_json)
-LoopClient[:TDS].api.v1.shipments('ABC').patch(body: { state: 'sent' }.to_json)
+LoopClient[:TDS].api.v1.shipments.post(body: { reference: 'ABC' })
+LoopClient[:TDS].api.v1.shipments('ABC').patch(body: { state: 'sent' })
 LoopClient[:TDS].api.v1.shipments('ABC').delete(params: { force: true })
 ```
 
 `get` and `delete` take `params:`; `post`, `put` and `patch` take `body:`. Every request carries `content-type: application/json` and the bearer token.
 
-Serialise the body yourself. There is no request-side JSON middleware, so `body:` is handed to Faraday untouched — pass a Hash and the server receives its Ruby inspect output, not JSON.
+A Hash body is serialised to JSON for you; a String is sent as given.
 
 ### Reading a response
 
@@ -97,7 +98,7 @@ response.body[0].package.sku       # => '1314254645627'
 
 ### Failures
 
-An HTTP error status is **not** raised — check `response.status` yourself. `LoopClient::Error` is raised for a request the client cannot make at all: an unregistered service key, a blank `url` or `audience`, or an unsupported HTTP method. Transport and parsing failures surface as the underlying Faraday exception, logged and re-raised.
+An HTTP error status is **not** raised — check `response.status` yourself. `LoopClient::Error` is raised for a request the client cannot make at all: an unregistered service key, a blank `url` or `audience`, an unsupported HTTP method, a missing `cache_store`, or an Auth0 token request that fails or comes back without a token. Transport and parsing failures surface as the underlying Faraday exception, logged and re-raised.
 
 ## Authentication and token caching
 

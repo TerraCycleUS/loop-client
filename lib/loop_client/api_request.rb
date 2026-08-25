@@ -43,9 +43,7 @@ module LoopClient
     end
 
     def connection
-      @connection ||= Faraday.new(url: url, headers: headers) do |f|
-        f.response :json, parser_options: { object_class: OpenStruct }
-      end
+      @connection ||= Connection.build(url: url, headers: headers)
     end
 
     def headers

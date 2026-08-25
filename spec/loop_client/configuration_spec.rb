@@ -31,12 +31,12 @@ RSpec.describe LoopClient::Configuration do
   describe '#add_api' do
     it 'raises error for blank url' do
       expect { configuration.add_api('TDS', url: nil, audience: 'audience') }
-        .to raise_error LoopClient::Error, "Url can't be blank"
+        .to raise_error LoopClient::Error, "url can't be blank"
     end
 
     it 'raises error for empty string url' do
       expect { configuration.add_api('TDS', url: '', audience: 'audience') }
-        .to raise_error LoopClient::Error, "Url can't be blank"
+        .to raise_error LoopClient::Error, "url can't be blank"
     end
 
     it 'raises error for blank audience' do
