@@ -10,6 +10,7 @@
   concurrent
   active_support
   active_support/core_ext/object/blank
+  active_support/core_ext/object/try
 ].each(&method(:require))
 
 module LoopClient

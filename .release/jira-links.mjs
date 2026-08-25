@@ -1,5 +1,5 @@
-const JIRA_PROJECT = process.env.JIRA_PROJECT ?? 'ITG'
-const JIRA_BROWSE_URL = process.env.JIRA_BROWSE_URL ?? 'https://terracycle.atlassian.net/browse'
+const JIRA_PROJECT = process.env.JIRA_PROJECT || 'ITG'
+const JIRA_BROWSE_URL = process.env.JIRA_BROWSE_URL || 'https://terracycle.atlassian.net/browse'
 const REFERENCE = new RegExp(`\\[(${JIRA_PROJECT}-\\d+)\\]`, 'g')
 const LOOSE_KEY = new RegExp(`(?<![\\[/\\w])(${JIRA_PROJECT}-\\d+)(?![\\w-])`, 'g')
 const TRAILING_DEFINITION = new RegExp(`\\n\\[${JIRA_PROJECT}-\\d+\\]: \\S+$`)

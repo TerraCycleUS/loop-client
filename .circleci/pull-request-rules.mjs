@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const JIRA_PROJECT = process.env.JIRA_PROJECT ?? 'ITG'
+const JIRA_PROJECT = process.env.JIRA_PROJECT || 'ITG'
 
 const KEY = `${JIRA_PROJECT}-\\d+`
 const SCOPE = '(?:\\([a-z0-9][a-z0-9._/-]*\\))?!?'

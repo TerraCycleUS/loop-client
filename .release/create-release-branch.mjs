@@ -28,7 +28,11 @@ const created = await request('/git/refs', {
   method: 'POST',
   body: JSON.stringify({ ref: `refs/heads/${tag}`, sha }),
 })
-if (!created.ok && created.status !== 422) {
+if (created.status === 422) {
+  console.log(`${tag}: another run created the branch first.`)
+  process.exit(0)
+}
+if (!created.ok) {
   throw new Error(`GitHub returned ${created.status} while creating branch ${tag}`)
 }
 

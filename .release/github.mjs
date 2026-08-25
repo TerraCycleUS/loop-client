@@ -1,8 +1,14 @@
 const token = process.env.RELEASE_PLEASE_TOKEN
-const repository = process.env.RELEASE_REPOSITORY ??
-  `${process.env.CIRCLE_PROJECT_USERNAME}/${process.env.CIRCLE_PROJECT_REPONAME}`
+const repository = process.env.RELEASE_REPOSITORY ||
+  [process.env.CIRCLE_PROJECT_USERNAME, process.env.CIRCLE_PROJECT_REPONAME].filter(Boolean).join('/')
 
+// An unresolved repository would spell `undefined/undefined` into every URL, and the 404
+// that comes back reads to `optionalJson` as "nothing published yet".
 export function request(path, options = {}) {
+  if (!repository.includes('/')) {
+    throw new Error('Set RELEASE_REPOSITORY as owner/repo; CIRCLE_PROJECT_USERNAME and CIRCLE_PROJECT_REPONAME are not both set.')
+  }
+
   return fetch(`https://api.github.com/repos/${repository}${path}`, {
     ...options,
     headers: {
