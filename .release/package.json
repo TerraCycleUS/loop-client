@@ -1,10 +1,7 @@
 {
-  "name": "release-tooling",
+  "name": "release",
   "private": true,
-  "scripts": {
-    "postinstall": "node ./suppress-release-comment.mjs"
-  },
   "dependencies": {
-    "release-please": "17.11.1"
+    "@terracycleus/release-tooling": "github:TerraCycleUS/release-tooling#v1.0.0"
   }
 }
