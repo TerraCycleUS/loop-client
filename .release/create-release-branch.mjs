@@ -11,9 +11,8 @@ if (!release) {
 }
 
 const tag = release.tag_name
-// Heroku picks a release from the branch list, and each repository names those branches
-// its own way; RELEASE_BRANCH_PREFIX carries that difference instead of the code.
-const branch = `${process.env.RELEASE_BRANCH_PREFIX || ''}${tag}`
+// Heroku picks a release from the branch list, so every repository cuts release/<tag>.
+const branch = `release/${tag}`
 const { sha } = await json(`/commits/${tag}`)
 
 const existing = await request(`/git/ref/heads/${branch}`)

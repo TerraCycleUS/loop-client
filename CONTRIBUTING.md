@@ -43,7 +43,7 @@ ITG-123-short-description
 
 That name is what links the branch and its pull request to the issue, and CI rejects anything else. Branches nobody types by hand are exempt: `master`, `staging`, `production`, the branches cut for each release, the `release-please--*` branches, `dependabot/*`, and the `revert-<number>-*` branches GitHub creates.
 
-A merged branch is deleted automatically. Every published release also gets a branch named after its tag, so a release can be picked from Heroku's branch list. `RELEASE_BRANCH_PREFIX` decides whether that branch is `vX.Y.Z` or `release/vX.Y.Z`.
+A merged branch is deleted automatically. Every published release also gets a `release/<tag>` branch, so a release can be picked from Heroku's branch list.
 
 ## Jira links
 
