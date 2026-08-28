@@ -59,7 +59,8 @@
   "packages": {
     ".": {
       "package-name": "loop_client",
-      "release-type": "ruby"
+      "release-type": "ruby",
+      "version-file": "lib/loop_client/version.rb"
     }
   }
 }
