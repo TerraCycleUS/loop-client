@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module LoopClient
-  VERSION = '2.0.3'
+  VERSION = '2.0.4'
 end
