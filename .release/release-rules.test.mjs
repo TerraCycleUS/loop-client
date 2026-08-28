@@ -13,8 +13,13 @@ import { DefaultVersioningStrategy } from './node_modules/release-please/build/s
 
 const config = JSON.parse(await readFile('release-please-config.json', 'utf8'))
 const manifestVersions = JSON.parse(await readFile('.release-please-manifest.json', 'utf8'))
-const versionSource = await readFile('lib/loop_client/version.rb', 'utf8')
+const packageConfig = config.packages['.']
+const owner = 'TerraCycleUS'
+const repo = packageConfig['package-name'].replace(/_/g, '-')
+const versionSource = await readFile(packageConfig['version-file'], 'utf8')
 const gemfileLock = await readFile('Gemfile.lock', 'utf8')
+// Only a packaged gem lists itself in its own lockfile; an application does not.
+const packagedGem = new RegExp(`^\\s+${packageConfig['package-name']} \\(`, 'm').test(gemfileLock)
 const currentVersion = Version.parse(manifestVersions['.'])
 const expectedPatchVersion = new Version(
   currentVersion.major,
@@ -33,20 +38,20 @@ const manifest = await Manifest.fromManifest(
       if (path === '.release-please-manifest.json') return manifestVersions
       throw new Error(`Unexpected manifest path: ${path}`)
     },
-    repository: { owner: 'TerraCycleUS', repo: 'loop-client' },
+    repository: { owner, repo },
   },
   'master',
 )
 
 assert.equal(manifest.repositoryConfig['.'].releaseType, 'ruby')
 
-const packageConfig = manifest.repositoryConfig['.']
 const strategy = await buildStrategy({
-  github: { repository: { owner: 'TerraCycleUS', repo: 'loop-client' } },
-  releaseType: packageConfig.releaseType,
+  github: { repository: { owner, repo } },
+  releaseType: packageConfig['release-type'],
   targetBranch: 'master',
-  packageName: packageConfig.packageName,
-  includeComponentInTag: packageConfig.includeComponentInTag,
+  packageName: packageConfig['package-name'],
+  includeComponentInTag: config['include-component-in-tag'],
+  versionFile: packageConfig['version-file'],
 })
 const updates = await strategy.buildUpdates({
   changelogEntry: '',
@@ -59,12 +64,14 @@ const updates = await strategy.buildUpdates({
 assert.equal(await strategy.getComponent(), '')
 assert.deepEqual(updates.map(update => update.path), [
   'CHANGELOG.md',
-  'lib/loop_client/version.rb',
+  packageConfig['version-file'],
   'Gemfile.lock',
 ])
 assert.equal(manifest.releasedVersions['.'].toString(), currentVersion.toString())
 assert.match(versionSource, new RegExp(`VERSION = ['\"]${currentVersion.toString()}['\"]`))
-assert.match(gemfileLock, new RegExp(`loop_client \\(${currentVersion.toString()}\\)`))
+if (packagedGem) {
+  assert.match(gemfileLock, new RegExp(`${packageConfig['package-name']} \\(${currentVersion.toString()}\\)`))
+}
 
 const releaseTitle = PullRequestTitle.ofComponentTargetBranchVersion(
   await strategy.getComponent(),
@@ -131,17 +138,19 @@ for (const { type, section } of config['changelog-sections']) {
 }
 
 const updatedVersionSource = new VersionRB({ version: expectedPatchVersion }).updateContent(versionSource)
-const updatedGemfileLock = new GemfileLock({
-  gemName: 'loop_client',
-  version: expectedPatchVersion,
-}).updateContent(gemfileLock)
-
 assert.match(updatedVersionSource, new RegExp(`VERSION = ['\"]${expectedPatchVersion.toString()}['\"]`))
-assert.match(updatedGemfileLock, new RegExp(`loop_client \\(${expectedPatchVersion.toString()}\\)`))
+
+if (packagedGem) {
+  const updatedGemfileLock = new GemfileLock({
+    gemName: packageConfig['package-name'],
+    version: expectedPatchVersion,
+  }).updateContent(gemfileLock)
+  assert.match(updatedGemfileLock, new RegExp(`${packageConfig['package-name']} \\(${expectedPatchVersion.toString()}\\)`))
+}
 
 console.log(
   `Release rules verified: feat=minor, breaking=major, every one of the ${config['changelog-sections'].length} types releases and is listed.`,
 )
-console.log('Ruby updates verified: version.rb and Gemfile.lock use the same release version.')
+console.log(`Version file verified: ${packageConfig['version-file']} holds ${currentVersion.toString()}.`)
 console.log('\nMaintenance fixture preview:\n')
 console.log(maintenanceNotes)

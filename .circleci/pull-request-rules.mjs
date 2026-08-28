@@ -11,7 +11,8 @@ const KEYS = `(?:\\[${KEY}\\])+`
 const ANY_KEY = new RegExp(KEY, 'i')
 
 const BRANCH = new RegExp(`^${JIRA_PROJECT}-\\d+-[a-z0-9]+(?:[-_][a-z0-9]+)*$`)
-const BRANCH_EXEMPT = [/^master$/, /^v\d+\.\d+\.\d+$/, /^release-please--/, /^dependabot\//, /^revert-\d+-/]
+const BRANCH_EXEMPT = [/^master$/, /^staging$/, /^production$/, /^v\d+\.\d+\.\d+$/,
+  /^release\/v\d+\.\d+\.\d+$/, /^release-please--/, /^dependabot\//, /^revert-\d+-/]
 
 const CONFIG_PATH = resolve(dirname(fileURLToPath(import.meta.url)), '../release-please-config.json')
 const PLACEHOLDERS = { scope: '(?:\\([^)]+\\))?', component: '(?: \\S+)?', version: '\\d+\\.\\d+\\.\\d+' }

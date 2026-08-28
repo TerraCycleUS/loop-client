@@ -1,5 +1,5 @@
 {
-  "name": "loop-client-release-tooling",
+  "name": "release-tooling",
   "private": true,
   "scripts": {
     "postinstall": "node ./suppress-release-comment.mjs"

@@ -8,8 +8,8 @@ async function pullRequestTitle() {
   if (!number) return null
 
   const repository = `${process.env.CIRCLE_PROJECT_USERNAME}/${process.env.CIRCLE_PROJECT_REPONAME}`
-  // Unauthenticated reads work while the repository is public, but share a per-IP rate
-  // limit with every other CircleCI job; a token, when present, lifts that.
+  // A public repository answers an unauthenticated read, but shares a per-IP rate limit
+  // with every other CircleCI job; a private one answers 404. A token settles both.
   const token = process.env.GITHUB_TOKEN
   const response = await fetch(`https://api.github.com/repos/${repository}/pulls/${number}`, {
     headers: {
@@ -21,10 +21,11 @@ async function pullRequestTitle() {
     throw new Error('GitHub rejected the request: rate limit reached for this CircleCI IP. Rerun the job.')
   }
   if (response.status === 404) {
-    throw new Error(`GitHub returned 404 for pull request ${number}. ` +
+    throw new Error(`GitHub returned 404 for pull request ${number}. A private repository ` +
+      'answers 404 rather than 403, so ' +
       (token
-        ? 'GITHUB_TOKEN cannot read pull requests here; it needs a token with pull_requests:read.'
-        : 'If this repository is no longer public, the job needs a GITHUB_TOKEN with pull_requests:read.'))
+        ? 'GITHUB_TOKEN cannot read pull requests here; it needs pull_requests:read.'
+        : 'this job needs a GITHUB_TOKEN with pull_requests:read.'))
   }
   if (!response.ok) throw new Error(`GitHub returned ${response.status} while reading pull request ${number}`)
   return (await response.json()).title
