@@ -135,7 +135,7 @@ Jira keys in the changelog and in the release notes are turned into links to the
 
 Do not run `bundle exec rake release`: tags belong to Release Please, and the gem is not pushed to RubyGems.
 
-CircleCI runs `build`, `secret-scan`, `release_rules` and `pr_rules` on every branch; the release job runs on `master` only.
+CircleCI runs `build`, `secret-scan` and `rules` on every branch; the release job runs on `master` only.
 
 Commit, branch and pull request rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
