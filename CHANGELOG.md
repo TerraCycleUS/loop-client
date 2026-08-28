@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/TerraCycleUS/loop-client/compare/v2.0.2...v2.0.3) (2026-08-28)
+
+
+### Code Refactoring
+
+* **ci:** [ITG-409] act on the cleanup review ([#31](https://github.com/TerraCycleUS/loop-client/issues/31)) ([adaf40b](https://github.com/TerraCycleUS/loop-client/commit/adaf40bfb6d6ebd8c4c4787b8adfd7ebab36dc60))
+
 ## [2.0.2](https://github.com/TerraCycleUS/loop-client/compare/v2.0.1...v2.0.2) (2026-08-28)
 
 
