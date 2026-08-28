@@ -25,10 +25,10 @@ export async function json(path, options = {}) {
   return response.json()
 }
 
-// A missing or unauthorised token must not read as "nothing published yet", which is
-// what every caller would conclude from the 404 GitHub answers.
+// GitHub answers 404 when a token is missing or cannot see the repository, and every
+// caller would read that as "nothing published yet" and skip its work silently.
 export function requireToken() {
-  if (!token) throw new Error('RELEASE_PLEASE_TOKEN is not set.')
+  if (!token) throw new Error('RELEASE_PLEASE_TOKEN is not set; GitHub then answers 404 and the run skips its work.')
 }
 
 export async function optionalJson(path, options = {}) {
