@@ -4,6 +4,9 @@ executors:
   node:
     docker:
       - image: cimg/node:22.23.2
+        environment:
+          JIRA_PROJECT: ITG
+          JIRA_BROWSE_URL: https://terracycle.atlassian.net/browse
 
 commands:
   install_release_tooling:
@@ -71,20 +74,16 @@ jobs:
       - install_release_tooling
       - run:
           name: Verify release rules
-          command: |
-            node .release/release-rules.test.mjs
-            node .release/jira-links.test.mjs
-            node .release/github.test.mjs
+          command: .release/node_modules/.bin/verify-release-rules
 
   pr_rules:
     executor: node
     steps:
       - checkout
+      - install_release_tooling
       - run:
           name: Verify branch and pull request title rules
-          command: |
-            node .circleci/pull-request-rules.test.mjs
-            node .circleci/validate-pull-request.mjs
+          command: .release/node_modules/.bin/validate-pull-request
 
   # RELEASE_PLEASE_TOKEN comes from the tc-loop-release-please context, shared by the TC
   # and Loop repositories. Only this job may carry it: it is the one job restricted to
@@ -114,13 +113,13 @@ jobs:
             "$RELEASE_PLEASE" release-pr "${ARGS[@]}"
       - run:
           name: Branch the published release so Heroku can deploy it
-          command: node .release/create-release-branch.mjs
+          command: .release/node_modules/.bin/create-release-branch
       - run:
           name: Resolve Jira keys in the published release notes
-          command: node .release/linkify-release-notes.mjs
+          command: .release/node_modules/.bin/linkify-release-notes
       - run:
           name: Resolve Jira keys in the release pull request changelog
-          command: node .release/linkify-changelog.mjs
+          command: .release/node_modules/.bin/linkify-changelog
 
 workflows:
   build-test-release:
