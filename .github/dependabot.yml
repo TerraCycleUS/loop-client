@@ -17,7 +17,8 @@ updates:
   - package-ecosystem: bundler
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
+      day: tuesday
     commit-message:
       prefix: maintenance
       include: scope
