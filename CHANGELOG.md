@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.6](https://github.com/TerraCycleUS/loop-client/compare/v2.0.5...v2.0.6) (2026-08-30)
+
+
+### Build System
+
+* **release:** [ITG-409] take release-tooling v1.3.0 ([#37](https://github.com/TerraCycleUS/loop-client/issues/37)) ([de9146f](https://github.com/TerraCycleUS/loop-client/commit/de9146f88d11490c3ac443cc860849bb21e0bcfa))
+
 ## [2.0.5](https://github.com/TerraCycleUS/loop-client/compare/v2.0.4...v2.0.5) (2026-08-29)
 
 
