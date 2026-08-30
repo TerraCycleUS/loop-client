@@ -1,0 +1,29 @@
+version: 2
+
+updates:
+  # The shared release tooling is consumed by git tag. Resolving it is pinned in
+  # .release/package-lock.json, so nothing in the repository moves to a new tag on its
+  # own — this entry is what keeps every repository on the same version of the standard.
+  - package-ecosystem: npm
+    directory: /.release
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: build
+      include: scope
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: tuesday
+    commit-message:
+      prefix: maintenance
+      include: scope
+    open-pull-requests-limit: 2
+    groups:
+      gems:
+        patterns:
+          - "*"
