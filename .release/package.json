@@ -2,6 +2,6 @@
   "name": "release",
   "private": true,
   "dependencies": {
-    "@terracycleus/release-tooling": "github:TerraCycleUS/release-tooling#v1.3.0"
+    "@terracycleus/release-tooling": "github:TerraCycleUS/release-tooling#v1.4.0"
   }
 }
