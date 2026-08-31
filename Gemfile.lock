@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    loop_client (2.0.6)
+    loop_client (2.0.7)
       activesupport
       addressable
       concurrent-ruby

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.7](https://github.com/TerraCycleUS/loop-client/compare/v2.0.6...v2.0.7) (2026-08-31)
+
+
+### Build System
+
+* **deps:** bump @terracycleus/release-tooling from v1.4.0 to v1.2.0 in /.release ([#39](https://github.com/TerraCycleUS/loop-client/issues/39)) ([03a4112](https://github.com/TerraCycleUS/loop-client/commit/03a411236a31a2f05074207d0f3c8b2a324df69f))
+
 ## [2.0.6](https://github.com/TerraCycleUS/loop-client/compare/v2.0.5...v2.0.6) (2026-08-30)
 
 
