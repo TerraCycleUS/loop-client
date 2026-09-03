@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.8](https://github.com/TerraCycleUS/loop-client/compare/v2.0.7...v2.0.8) (2026-09-03)
+
+
+### Maintenance
+
+* **deps:** bump webmock from 3.26.3 to 3.26.4 in the gems group ([#41](https://github.com/TerraCycleUS/loop-client/issues/41)) ([697eb13](https://github.com/TerraCycleUS/loop-client/commit/697eb130491b05d446e044d3ada780059311a7c2))
+
 ## [2.0.7](https://github.com/TerraCycleUS/loop-client/compare/v2.0.6...v2.0.7) (2026-08-31)
 
 
