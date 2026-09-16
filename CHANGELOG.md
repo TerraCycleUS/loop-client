@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.10](https://github.com/TerraCycleUS/loop-client/compare/v2.0.9...v2.0.10) (2026-09-16)
+
+
+### Bug Fixes
+
+* **deps:** [ITG-376] take faraday 2.14.4 so json 3 works ([#51](https://github.com/TerraCycleUS/loop-client/issues/51)) ([ce6fb87](https://github.com/TerraCycleUS/loop-client/commit/ce6fb87b2bdfc427ac520857cdaa1153575e63a1))
+
+
+### Maintenance
+
+* **deps:** bump the gems group across 1 directory with 3 updates ([#50](https://github.com/TerraCycleUS/loop-client/issues/50)) ([ed77874](https://github.com/TerraCycleUS/loop-client/commit/ed778740d5db6a14e91fc93e8c17fa14ae279c94))
+
+
+### Build System
+
+* **deps:** bump @terracycleus/release-tooling from v1.5.1 to v1.5.2 in /.release ([#48](https://github.com/TerraCycleUS/loop-client/issues/48)) ([37ed10e](https://github.com/TerraCycleUS/loop-client/commit/37ed10ea652111c8b54244964c098b60c43b4712))
+
 ## [2.0.9](https://github.com/TerraCycleUS/loop-client/compare/v2.0.8...v2.0.9) (2026-09-07)
 
 
