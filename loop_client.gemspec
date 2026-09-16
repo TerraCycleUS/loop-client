@@ -38,7 +38,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'addressable'
   spec.add_dependency 'concurrent-ruby'
-  spec.add_dependency 'faraday'
+  # 2.14.4 passes parser options as keywords; earlier versions crash on json 3.
+  spec.add_dependency 'faraday', '>= 2.14.4'
   spec.add_dependency 'jwt'
   spec.add_dependency 'ostruct'
   spec.add_dependency 'solid_cache'
