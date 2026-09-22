@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.11](https://github.com/TerraCycleUS/loop-client/compare/v2.0.10...v2.0.11) (2026-09-22)
+
+
+### Maintenance
+
+* **deps:** bump simplecov from 1.2.0 to 1.3.0 in the gems group ([#52](https://github.com/TerraCycleUS/loop-client/issues/52)) ([f2e4c1b](https://github.com/TerraCycleUS/loop-client/commit/f2e4c1b6a64077f3d44ffc2582baa7be14f186f1))
+
 ## [2.0.10](https://github.com/TerraCycleUS/loop-client/compare/v2.0.9...v2.0.10) (2026-09-16)
 
 
