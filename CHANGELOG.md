@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.11](https://github.com/TerraCycleUS/loop-client/compare/v2.0.10...v2.0.11) (2026-10-01)
+
+
+### Maintenance
+
+* **deps:** bump simplecov from 1.2.0 to 1.3.0 in the gems group ([#52](https://github.com/TerraCycleUS/loop-client/issues/52)) ([f2e4c1b](https://github.com/TerraCycleUS/loop-client/commit/f2e4c1b6a64077f3d44ffc2582baa7be14f186f1))
+* **deps:** bump the gems group with 2 updates ([#54](https://github.com/TerraCycleUS/loop-client/issues/54)) ([b86e09b](https://github.com/TerraCycleUS/loop-client/commit/b86e09b515a048d7652afd1cdfc472290a19354a))
+
+
+### Build System
+
+* **deps:** bump brace-expansion from 5.0.9 to 5.0.12 in /.release ([#55](https://github.com/TerraCycleUS/loop-client/issues/55)) ([87639b6](https://github.com/TerraCycleUS/loop-client/commit/87639b655903853da07e687af19a5279ae79a67b))
+
 ## [2.0.10](https://github.com/TerraCycleUS/loop-client/compare/v2.0.9...v2.0.10) (2026-09-16)
 
 
