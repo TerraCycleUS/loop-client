@@ -198,3 +198,5 @@
 [ITG-409]: https://terracycle.atlassian.net/browse/ITG-409
 [ITG-171]: https://terracycle.atlassian.net/browse/ITG-171
 [ITG-376]: https://terracycle.atlassian.net/browse/ITG-376
+[ITG-613]: https://terracycle.atlassian.net/browse/ITG-613
+[ITG-612]: https://terracycle.atlassian.net/browse/ITG-612
