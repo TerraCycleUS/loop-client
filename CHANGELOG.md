@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.12](https://github.com/TerraCycleUS/loop-client/compare/v2.0.11...v2.0.12) (2026-10-28)
+
+
+### Maintenance
+
+* **deps:** [ITG-613] upgrade Ruby to 4.0.9 and update gems ([#61](https://github.com/TerraCycleUS/loop-client/issues/61)) ([c23ebb1](https://github.com/TerraCycleUS/loop-client/commit/c23ebb17f9127149862b2cd369cc86866f22d54c))
+* **deps:** bump simplecov from 1.3.1 to 1.3.2 in the gems group ([#56](https://github.com/TerraCycleUS/loop-client/issues/56)) ([844e11e](https://github.com/TerraCycleUS/loop-client/commit/844e11e5955d7349a1407620703c6245fb254da0))
+* **deps:** bump the gems group across 1 directory with 2 updates ([#59](https://github.com/TerraCycleUS/loop-client/issues/59)) ([d87ecb7](https://github.com/TerraCycleUS/loop-client/commit/d87ecb7a404699cf5a61599d3ae2fd0977228568))
+* **deps:** bump the gems group with 2 updates ([#57](https://github.com/TerraCycleUS/loop-client/issues/57)) ([ba31601](https://github.com/TerraCycleUS/loop-client/commit/ba31601ac7db770b35fb3439e77bf892e420aefd))
+* **deps:** bump the gems group with 2 updates ([#58](https://github.com/TerraCycleUS/loop-client/issues/58)) ([db827e5](https://github.com/TerraCycleUS/loop-client/commit/db827e5c92bcf02644a887a4044f9f9b60574075))
+
+
+### Build System
+
+* **deps:** [ITG-612] update crass to 1.0.8 ([#60](https://github.com/TerraCycleUS/loop-client/issues/60)) ([8e324d0](https://github.com/TerraCycleUS/loop-client/commit/8e324d0cb3657da56357de9dacd39e69ef9131f2))
+
 ## [2.0.11](https://github.com/TerraCycleUS/loop-client/compare/v2.0.10...v2.0.11) (2026-10-01)
 
 
