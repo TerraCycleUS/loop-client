@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["bundler", "npm"],
+  "semanticCommits": "enabled",
+  "semanticCommitType": "maintenance",
+  "semanticCommitScope": "deps",
+  "separateMajorMinor": false,
+  "packageRules": [
+    { "matchManagers": ["bundler"], "groupName": "gems", "schedule": ["on tuesday"] },
+    {
+      "matchFileNames": [".release/package.json"],
+      "groupName": "release-tooling",
+      "semanticCommitType": "build",
+      "schedule": ["on monday"]
+    }
+  ]
+}
