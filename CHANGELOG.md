@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.13](https://github.com/TerraCycleUS/loop-client/compare/v2.0.12...v2.0.13) (2026-11-17)
+
+
+### Continuous Integration
+
+* **deps:** [ITG-671] replace dependabot version updates with renovate ([#67](https://github.com/TerraCycleUS/loop-client/issues/67)) ([a651dbd](https://github.com/TerraCycleUS/loop-client/commit/a651dbd9ada5257e0ab63342dcd45ff4edd6ba8d))
+
 ## [2.0.12](https://github.com/TerraCycleUS/loop-client/compare/v2.0.11...v2.0.12) (2026-11-11)
 
 
