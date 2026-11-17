@@ -212,3 +212,4 @@
 [ITG-656]: https://terracycle.atlassian.net/browse/ITG-656
 [ITG-612]: https://terracycle.atlassian.net/browse/ITG-612
 [ITG-627]: https://terracycle.atlassian.net/browse/ITG-627
+[ITG-671]: https://terracycle.atlassian.net/browse/ITG-671
