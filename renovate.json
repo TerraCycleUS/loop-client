@@ -5,6 +5,7 @@
   "semanticCommits": "enabled",
   "semanticCommitType": "maintenance",
   "semanticCommitScope": "deps",
+  "minimumReleaseAge": "3 days",
   "separateMajorMinor": false,
   "packageRules": [
     { "matchManagers": ["bundler"], "groupName": "gems" },
