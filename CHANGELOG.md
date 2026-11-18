@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.14](https://github.com/TerraCycleUS/loop-client/compare/v2.0.13...v2.0.14) (2026-11-18)
+
+
+### Continuous Integration
+
+* **deps:** [ITG-671] tune renovate: release age, split majors, no hourly limit ([#69](https://github.com/TerraCycleUS/loop-client/issues/69)) ([da11c06](https://github.com/TerraCycleUS/loop-client/commit/da11c06399a41216a908c52308f6460ab8f22203))
+
 ## [2.0.13](https://github.com/TerraCycleUS/loop-client/compare/v2.0.12...v2.0.13) (2026-11-17)
 
 
